@@ -382,7 +382,7 @@ body {
     }
 
     #menu {
-        @apply relative w-full mt-0 2xl:px-0 px-5 pt-8 pb-5 overflow-hidden lg:p-0 lg:h-[46.5vw];
+        @apply relative w-full mt-0 2xl:px-0 px-5 pt-8 pb-5 overflow-hidden lg:p-0 lg:h-[max(50vw,680px)];
 
         /* yarn balls (replace the leaves) */
         #m-left-leaf {
@@ -394,11 +394,11 @@ body {
         }
 
         .menu-head {
-            @apply container mx-auto mb-1 relative z-10
+            @apply container mx-auto mb-1 relative z-10 text-center
             lg:absolute lg:m-0 lg:max-w-none lg:inset-x-0 lg:w-full lg:text-center lg:top-[0.7vw] lg:z-20;
 
             p { @apply text-[#9B0209] lg:text-[clamp(13px,1.3vw,22px)]; }
-            h2 { @apply font-modern-negra text-[#9B0209] text-3xl leading-[0.95] max-w-[9ch]
+            h2 { @apply font-modern-negra text-[#9B0209] text-3xl leading-[0.95] max-w-none
             lg:text-[#9B0209] lg:text-[clamp(40px,5.6vw,100px)] lg:max-w-none lg:w-full; }
         }
 
@@ -466,6 +466,18 @@ body {
                 #title {
                     @apply font-modern-negra md:text-3xl text-4xl text-red-600 lg:text-[#9B0209] lg:text-[clamp(24px,2.5vw,44px)] lg:leading-none;
                 }
+
+                /* price row: old price crossed out, new price, discount badge (badge only when discount_active = true) */
+                .bag-price {
+                    @apply mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[#9B0209] lg:mt-[0.8vw] lg:gap-x-[0.8vw];
+
+                    .price-old { @apply text-base text-black/45 line-through lg:text-[clamp(14px,1.2vw,20px)]; }
+                    .price-new { @apply font-numerals text-3xl leading-none lg:text-[clamp(26px,2.4vw,42px)]; }
+                    .price-badge {
+                        @apply rounded-full bg-[#9B0209] px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-[#f7f2ea]
+                        lg:px-[0.9vw] lg:py-[0.3vw] lg:text-[clamp(10px,0.8vw,13px)];
+                    }
+                }
             }
 
             .details {
@@ -475,13 +487,17 @@ body {
                     @apply md:text-base lg:text-[clamp(15px,1.4vw,24px)] lg:leading-snug;
                 }
 
+                .bag-meta {
+                    @apply text-sm text-black/60 lg:text-[clamp(13px,1.1vw,18px)];
+                }
+
                 .swatches {
-                    @apply flex items-center gap-3 lg:gap-[1vw];
+                    @apply flex flex-wrap items-center gap-3 lg:gap-[1vw];
                 }
 
                 .swatch {
-                    @apply size-6 rounded-full border border-black/20 cursor-pointer transition-transform duration-300 hover:scale-110
-                    lg:size-[clamp(18px,1.6vw,30px)];
+                    @apply size-8 shrink-0 rounded-full border border-black/20 cursor-pointer transition-transform duration-300 hover:scale-110
+                    lg:size-[clamp(22px,2vw,36px)];
 
                     &.is-active {
                         @apply ring-2 ring-[#9B0209] ring-offset-2 ring-offset-white scale-110 lg:ring-offset-1;
