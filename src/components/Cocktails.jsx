@@ -1,8 +1,11 @@
 import React from 'react';
-import {cocktailLists} from "../../constants/Index.js";
+import useProducts from "../hooks/useProducts.js";
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap';
 const Cocktails = () => {
+    // CHANGED: list now comes from Supabase (was imported from constants/Index.js)
+    const { cocktailLists } = useProducts();
+
     useGSAP(() => {
         const parallaxTimeline = gsap.timeline({
             scrollTrigger: {

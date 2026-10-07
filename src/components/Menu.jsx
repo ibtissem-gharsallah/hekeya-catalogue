@@ -1,9 +1,9 @@
 "use client"
 import React, {useRef, useState} from 'react';
-import {sliderLists} from "../../constants/Index.js";
+import useProducts from "../hooks/useProducts.js";
 import {useGSAP} from "@gsap/react";
 import  gsap from "gsap";
-const Menu = () => {
+const MenuContent = ({ sliderLists }) => {
     const contentRef =useRef();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [colorIndex, setColorIndex] = useState(0);
@@ -134,7 +134,8 @@ const Menu = () => {
                     <div className="bag-name" aria-hidden="true">
                         <span>{currentCocktail.name}</span>
                     </div>
-                    <img className="object-contain" src={currentImage} alt={currentCocktail.name}/>
+                    {/* key = new <img> per photo, so the previous bag never lingers while the next one downloads */}
+                    <img key={currentImage} className="object-contain" src={currentImage} alt={currentCocktail.name}/>
                 </div>
                 <div className="recipe">
                     <div className="recipe-inner">
@@ -170,6 +171,14 @@ const Menu = () => {
 
         </section>
     );
+};
+
+// loads the bags from Supabase, then renders the original Menu untouched
+const Menu = () => {
+    const { sliderLists, loading } = useProducts();
+    // placeholder keeps #menu in the page (same height) while loading
+    if (loading || !sliderLists.length) return <section id="menu" aria-busy="true" />;
+    return <MenuContent sliderLists={sliderLists} />;
 };
 
 export default Menu;
