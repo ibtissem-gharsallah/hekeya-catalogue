@@ -58,24 +58,24 @@ const Hero = () => {
             <h1 className="title">HEKEYA</h1>
 
             <img
-                src="/images/hero-left-leaf.png"
+                src="/images-webp/hero-left-leaf.webp"
                 alt="left-leaf"
                 className="left-leaf"
             />
             <img
-                src="/images/hero-right-leaf.png"
+                src="/images-webp/hero-right-leaf.webp"
                 alt="right-leaf"
                 className="right-leaf"
             />
 
             <img
-                src="/images/yarn-ball.png"
+                src="/images-webp/yarn-ball.webp"
                 alt="yarn ball"
                 className="yarn-ball"
             />
 
             <div className="body">
-                <img src="/images/arrow2.png" alt="arrow" className="arrow h-30 w-5"/>
+                <img src="/images-webp/arrow2.webp" alt="arrow" className="arrow h-30 w-5"/>
 
                 <div className="content">
                     <div className="space-y-3">
