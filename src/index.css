@@ -1,0 +1,529 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Mona+Sans:ital,wght@0,200..900;1,200..900&family=Allura&family=Abril+Fatface&display=swap");
+
+@import "tailwindcss";
+
+@font-face {
+    font-family: "Modern Negra";
+    src: url("/fonts/Modern Negra Demo.ttf") format("truetype");
+}
+
+@theme {
+    --color-yellow: #e7d393;
+    --color-white-100: #efefef;
+    --font-sans: "Mona Sans", sans-serif;
+    --font-modern-negra: "Modern Negra", sans-serif;
+    --font-serif: "DM Serif Text", serif;
+    --font-script: "Allura", cursive;
+    --font-numerals: "Abril Fatface", "DM Serif Text", serif;
+}
+
+html,
+body {
+    width: 100%;
+    background-color: #f7f2ea;
+    color: black;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+@utility flex-center {
+    @apply flex justify-center items-center;
+}
+
+@utility col-center {
+    @apply flex flex-col justify-center items-center;
+}
+
+@utility abs-center {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+@utility text-gradient {
+    background: linear-gradient(to bottom, #910009, #910009);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+@utility radial-gradient {
+    background: radial-gradient(
+            circle at center,
+            #ececec 0%,
+            #fff 50%,
+            transparent 100%
+    );
+}
+
+@utility masked-img {
+    mask-image: url("/images/mask-img.png");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: 50%;
+}
+
+@layer components {
+    main {
+        @apply w-full overflow-x-hidden;
+    }
+
+    nav {
+        @apply fixed z-50 w-full ;
+
+        div {
+            @apply flex md:flex-row flex-col md:justify-between items-center gap-5 py-1 lg:px-5 px-5 container mx-auto;
+        }
+
+        p {
+            @apply font-modern-negra text-3xl -mb-2 text-red-600;
+        }
+
+        /* ADDED: Hekeya logo image (replaces the text) */
+        .logo {
+            @apply h-10 md:h-14 w-auto mx-4;
+        }
+
+        a {
+            @apply cursor-pointer text-nowrap md:text-base text-sm text-red-600;
+        }
+
+        ul {
+            @apply flex-center lg:gap-12 gap-7;
+        }
+    }
+
+
+
+    #hero {
+        @apply relative z-10 min-h-dvh w-full border border-transparent max-md:min-h-0 max-md:pb-12;
+        h1 { @apply md:mt-32 mt-40 text-8xl md:text-[20vw] leading-none text-center font-modern-negra; }
+        .left-leaf { @apply absolute left-0 md:top-20 xl:top-36 2xl:top-52 md:bottom-auto -bottom-20 md:w-fit w-1/3 max-md:bottom-auto max-md:top-32 max-md:w-[16vw]; }
+        .right-leaf { @apply absolute right-0 md:bottom-0 xl:top-0 2xl:top-12 top-1/2 md:w-fit w-24; }
+        .body {
+            @apply container  mx-auto absolute left-1/2 -translate-x-1/2 lg:bottom-20 top-auto md:top-[30vh] flex justify-between items-end px-5
+            max-md:relative max-md:left-auto max-md:translate-x-0 max-md:flex-col max-md:items-start max-md:gap-4 max-md:mt-2;
+            .arrow { @apply max-md:hidden;  }   /* the big arrow image is desktop-only */
+            .content {
+                @apply flex lg:flex-row flex-col w-full gap-10 justify-between items-center lg:items-end mx-auto max-md:items-start max-md:gap-6;
+                p:nth-of-type(2) { @apply font-modern-negra text-3xl md:text-6xl text-red-600 max-w-xl; }
+                p:last-of-type { @apply max-md:text-left 2xl:text-start text-center; }
+                .view-cocktails { @apply space-y-5 text-lg lg:max-w-2xs md:max-w-xs w-full;
+                    p { @apply text-left; }
+                    a { @apply font-semibold opacity-80 2xl:text-start text-center hover:text-red-600; } }
+            }
+        }
+
+        /* nested in #hero so it beats any old .yarn-ball rule left in your file */
+        .yarn-ball {
+            @apply absolute left-1/2 -translate-x-1/2 bottom-[-10vh] md:bottom-[-4vh] w-[30vw] md:w-[35vw] xl:w-[35vw] pointer-events-none
+            max-md:relative max-md:block max-md:left-auto max-md:bottom-auto max-md:translate-x-0 max-md:mx-auto max-md:w-[55vw] max-md:-mt-[11vw];
+        }
+    }
+
+    /* ===== Catalogue launch offer (20% off) ===== */
+    #offer {
+        @apply relative w-full overflow-hidden px-5 pt-20 pb-16 lg:px-0 lg:py-0;
+
+        /* corner yarn balls (cropped by the page edge) */
+        .offer-yarn-rose {
+            @apply absolute right-0 top-4 w-[16vw] pointer-events-none z-0 lg:top-[-4vw] lg:w-[7vw];
+        }
+        .offer-yarn-beige {
+            @apply hidden lg:block absolute left-0 bottom-[-3vw] w-[9vw] pointer-events-none z-0;
+        }
+
+        .offer-inner {
+            @apply relative z-10 lg:h-[56vw];
+        }
+
+        .offer-text {
+            @apply relative z-10 lg:pt-[3vw] lg:pl-[7.5vw] lg:w-[52vw];
+        }
+
+        .offer-eyebrow {
+            @apply inline-flex items-center gap-3 rounded-full border border-[#9B0209] px-5 py-2 text-[11px] tracking-[0.18em] uppercase text-[#9B0209]
+            lg:px-[1.6vw] lg:py-[0.7vw] lg:text-[clamp(10px,0.85vw,14px)];
+        }
+
+        /* text-reveal mask */
+        .mask {
+            @apply inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em];
+
+            &:first-of-type { @apply mr-[0.3em]; }
+        }
+
+        .offer-title {
+            @apply mt-6 font-modern-negra text-[#9B0209] leading-[0.95] lg:mt-[2vw];
+
+            .offer-pct, .offer-off {
+                @apply inline-block text-[17vw] lg:text-[8.6vw];
+            }
+            .offer-pct {
+                /* Modern Negra Demo has no digits (it prints the 'PERSONAL USE ONLY' badge), so numbers use a similar fat Didone */
+                font-family: var(--font-numerals);
+            }
+            .offer-sub {
+                @apply inline-block text-[10.5vw] lg:text-[5.4vw];
+            }
+        }
+
+        .offer-script {
+            @apply relative inline-block mt-2 font-script text-[9vw] leading-tight text-[#9B0209] lg:mt-[0.6vw] lg:text-[3.6vw];
+
+            svg { @apply block w-[88%] h-2 lg:h-[0.7vw]; }
+        }
+
+        .offer-copy {
+            @apply mt-6 space-y-2 lg:mt-[2.4vw] lg:max-w-[30vw];
+
+            p { @apply text-base text-black/80 lg:text-[clamp(14px,1.15vw,19px)] lg:leading-snug; }
+            p:last-child { @apply text-[#9B0209]; }
+        }
+
+        /* countdown: part of the composition, thin lines only */
+        .offer-count {
+            @apply mt-8 grid grid-cols-2 rounded-[1.75rem] border border-[#9B0209]/70
+            lg:mt-[2.4vw] lg:grid-cols-4 lg:rounded-full lg:max-w-[34vw];
+        }
+        .offer-unit {
+            @apply relative flex flex-col items-center py-4 text-[#9B0209] lg:py-[1.1vw];
+
+            &:nth-child(even) { @apply border-l border-[#9B0209]/30; }
+            &:nth-child(n+3) { @apply border-t border-[#9B0209]/30; }
+
+            @media (min-width: 1024px) {
+                &:nth-child(even), &:nth-child(n+3) { border: 0; }
+                &:not(:first-child)::before {
+                    content: "";
+                    @apply absolute left-0 top-1/4 h-1/2 w-px bg-[#9B0209]/50;
+                }
+            }
+        }
+        .offer-num {
+            @apply inline-block min-w-[2ch] text-center font-numerals text-4xl leading-none lg:text-[2.7vw];
+        }
+        .offer-label {
+            @apply mt-2 text-[10px] tracking-[0.2em] uppercase lg:mt-[0.6vw] lg:text-[clamp(9px,0.7vw,12px)];
+        }
+        .offer-ended {
+            @apply col-span-2 py-5 text-center font-modern-negra text-2xl text-[#9B0209] lg:col-span-4 lg:py-[1.6vw] lg:text-[2vw];
+        }
+
+        .offer-cta {
+            @apply mt-8 inline-flex items-center gap-4 rounded-full bg-[#9B0209] px-8 py-4 text-base text-[#f7f2ea] transition-colors duration-300 hover:bg-[#6f0107]
+            lg:mt-[2.4vw] lg:px-[2.4vw] lg:py-[1.2vw] lg:text-[clamp(14px,1.05vw,17px)];
+        }
+
+        .offer-visual {
+            @apply relative z-0 mx-auto mt-12 w-[92vw] lg:absolute lg:left-[40.5vw] lg:top-[13vw] lg:mt-0 lg:w-[47vw];
+
+            .offer-yarn-main { @apply block w-full h-auto drop-shadow-[0_22px_24px_rgba(0,0,0,0.20)]; }
+        }
+
+        .offer-note {
+            @apply hidden lg:flex absolute left-[82vw] top-[3.5vw] z-10 flex-col text-[#9B0209] font-script text-[clamp(18px,1.9vw,32px)] leading-[1.15] -rotate-[8deg];
+
+            svg { @apply ml-[1.5vw] mt-[0.6vw] w-[3vw] h-auto; }
+        }
+
+        .offer-spark {
+            @apply hidden lg:block absolute left-[92.5vw] top-[43.5vw] w-[1.8vw] text-[#9B0209];
+        }
+
+        .offer-features {
+            @apply mt-10 grid gap-5 text-[#9B0209]
+            lg:mt-0 lg:absolute lg:left-[31vw] lg:top-[50.5vw] lg:flex lg:gap-[2.6vw] z-10;
+
+            li { @apply flex items-center gap-3 text-[13px] leading-snug tracking-wide text-black/80 lg:text-[clamp(10px,0.82vw,14px)]; }
+            li svg { @apply w-8 shrink-0 text-[#9B0209] lg:w-[2.2vw]; }
+            li:not(:first-child) { @apply lg:border-l lg:border-[#9B0209]/40 lg:pl-[2.6vw]; }
+        }
+    }
+
+    video {
+        @apply w-full md:h-[80%] h-1/2 absolute bottom-0 left-0 md:object-contain object-bottom object-cover;
+    }
+
+    #cocktails {
+        @apply relative min-h-dvh w-full overflow-hidden max-md:min-h-0 max-md:pb-16;
+
+        #c-left-leaf {
+            @apply absolute left-0 md:bottom-0 md:top-auto -top-20 md:w-fit w-1/3;
+        }
+
+        #c-right-leaf {
+            @apply absolute right-0 md:bottom-0 md:top-auto -top-20 md:w-fit w-1/3 max-md:top-auto max-md:bottom-0;
+        }
+
+        .list {
+            @apply container mx-auto relative z-10 flex md:flex-row flex-col justify-between items-start gap-20 pt-16 2xl:px-0 px-5;
+
+            .popular {
+                @apply space-y-8 w-full md:w-3/4 md:max-w-4xl mx-auto;   /* CHANGED: was "w-full md:w-fit" */
+            }
+
+            .loved {
+                @apply space-y-8 w-full md:w-fit pb-20 md:pb-0;
+            }
+
+            h2 {
+                @apply text-xl font-medium;
+            }
+
+            ul {
+                @apply space-y-8;
+
+                li {
+                    @apply flex justify-between items-start;
+
+                    h3 {
+                        @apply font-modern-negra 2xl:text-3xl text-xl text-red-600;
+                    }
+
+                    p {
+                        @apply text-sm;
+                    }
+
+                    span {
+                        @apply text-xl font-medium;
+                    }
+                }
+            }
+        }
+    }
+
+    #about {
+        @apply min-h-screen py-28 2xl:px-0 px-5 container mx-auto;
+
+        .content {
+            @apply grid grid-cols-1 lg:grid-cols-12 gap-5;
+
+            h2 {
+                @apply text-5xl md:text-6xl font-modern-negra max-w-lg;
+            }
+
+            .sub-content {
+                @apply md:col-span-4 space-y-5 flex flex-col justify-between;
+
+                p {
+                    @apply text-lg;
+                }
+
+                div {
+                    @apply flex flex-col justify-between md:gap-2 gap-5;
+
+                    span {
+                        @apply text-red-600 font-bold text-5xl;
+                    }
+                }
+            }
+        }
+
+        .badge {
+            @apply inline-block rounded-full bg-black text-white px-4 py-2 text-sm font-medium mb-8;
+        }
+
+        .top-grid {
+            @apply grid grid-cols-1 xl:grid-cols-12 gap-5 mb-5 md:px-0 px-5;
+
+            > div {
+                @apply rounded-3xl overflow-hidden h-72 relative;
+            }
+
+            img {
+                @apply object-cover w-full h-full;
+            }
+        }
+
+        .bottom-grid {
+            @apply grid grid-cols-1 md:grid-cols-12 gap-5 md:px-0 px-5;
+
+            > div {
+                @apply rounded-3xl overflow-hidden h-72 relative;
+            }
+
+            img {
+                @apply object-cover w-full h-full;
+            }
+        }
+    }
+
+    #art {
+        @apply flex-center flex-col min-h-dvh p-5 mt-20 relative radial-gradient;
+
+        h2 {
+            @apply relative md:text-[20vw] text-8xl text-nowrap leading-none font-modern-negra text-center text-black mb-8;
+        }
+
+        .content {
+            @apply flex md:flex-row flex-col justify-between md:mb-16 md:mt-0 mt-40 gap-10;
+        }
+
+        .cocktail-img {
+            @apply md:w-[60vw] w-full h-[50vh] md:h-[70vh] rounded-4xl overflow-hidden absolute top-0 md:top-1/2 md:-translate-y-1/2 left-1/2 -translate-x-1/2;
+        }
+
+        .masked-container {
+            h2 {
+                @apply text-4xl md:text-5xl font-modern-negra text-center mb-10 text-black mt-32;
+            }
+
+            div {
+                @apply opacity-0 md:px-0 px-5 space-y-5 absolute md:bottom-5 bottom-52 left-1/2 -translate-x-1/2;
+
+                h3 {
+                    @apply md:text-5xl text-2xl text-center font-serif md:w-full w-80 text-black;
+                }
+
+                p {
+                    @apply text-lg text-center;
+                }
+            }
+        }
+    }
+
+    #menu {
+        @apply relative w-full mt-0 2xl:px-0 px-5 pt-8 pb-5 overflow-hidden lg:p-0 lg:h-[46.5vw];
+
+        /* yarn balls (replace the leaves) */
+        #m-left-leaf {
+            @apply absolute left-0 top-[62%] w-[8vw] object-contain pointer-events-none z-0 lg:top-[16.5vw] lg:w-auto lg:h-[19vw];
+        }
+
+        #m-right-leaf {
+            @apply hidden lg:block absolute right-0 top-[30.5vw] h-[18vw] w-auto object-contain pointer-events-none z-0;
+        }
+
+        .menu-head {
+            @apply container mx-auto mb-1 relative z-10
+            lg:absolute lg:m-0 lg:max-w-none lg:inset-x-0 lg:w-full lg:text-center lg:top-[0.7vw] lg:z-20;
+
+            p { @apply text-[#9B0209] lg:text-[clamp(13px,1.3vw,22px)]; }
+            h2 { @apply font-modern-negra text-[#9B0209] text-3xl leading-[0.95] max-w-[9ch]
+            lg:text-[#9B0209] lg:text-[clamp(40px,5.6vw,100px)] lg:max-w-none lg:w-full; }
+        }
+
+        .cocktail-tabs {
+            @apply flex flex-wrap justify-center md:gap-10 gap-x-6 gap-y-3 mb-3 relative z-10
+            lg:absolute lg:inset-x-0 lg:top-[10.5vw] lg:mb-0 lg:gap-x-[5vw] lg:flex-nowrap;
+
+            button {
+                @apply md:text-2xl text-xl pb-1 cursor-pointer hover:text-[#9B0209] hover:border-[#9B0209] border-b-1 transition-colors font-modern-negra
+                lg:text-[clamp(34px,1.9vw,34px)] lg:pb-[0.7vw];
+            }
+        }
+
+        /* ADDED: View All (desktop only) */
+        .view-all {
+            @apply hidden lg:flex items-center gap-[0.5vw] absolute right-[4vw] top-[11.5vw] z-20 text-[#9B0209] text-[clamp(13px,1.2vw,20px)] hover:opacity-70 transition-opacity;
+        }
+
+        .content {
+            @apply flex flex-col justify-between items-center container mx-auto relative rounded-3xl bg-white/50 py-6
+            lg:absolute lg:inset-x-0 lg:top-[17.5vw] lg:grid lg:grid-cols-[auto_auto] lg:justify-center lg:items-start lg:gap-x-[4vw] lg:bg-transparent lg:py-0;
+
+            .arrows {
+                @apply flex items-center justify-between absolute inset-0 z-20 pointer-events-none lg:inset-x-[12vw];
+
+                button {
+                    @apply text-black hover:text-red-600 cursor-pointer transition-colors max-w-36 pointer-events-auto outline-none focus-visible:outline-2 focus-visible:outline-red-600;
+
+                    img { @apply w-10 lg:w-[clamp(45px,3.6vw,64px)]; }
+
+                    span {
+                        @apply text-3xl font-modern-negra leading-none hidden;
+                    }
+                }
+            }
+        }
+
+        .cocktail {
+            @apply relative flex justify-center items-center w-full lg:w-auto lg:col-start-2 lg:row-start-1;
+
+            img {
+                @apply relative z-10 object-contain h-[50vh] lg:h-[28vw];
+            }
+
+            .bag-name {
+                @apply absolute inset-0 z-0 flex items-start justify-center pt-[6%] pointer-events-none select-none
+                lg:bottom-auto lg:top-0 lg:pt-0;
+
+                span {
+                    @apply font-modern-negra uppercase leading-none whitespace-nowrap text-red-600/20 text-[30vw]
+                    lg:text-[#9B0209]/30 lg:text-[14vw];
+                }
+            }
+        }
+
+        .recipe {
+            @apply flex items-center w-full z-20
+            lg:w-[20vw] lg:min-w-56 lg:items-start lg:pt-[2.5vw] lg:col-start-1 lg:row-start-1;
+
+            .recipe-inner {
+                @apply space-y-2 px-5 pt-4 lg:p-0 lg:space-y-[1.6vw];
+            }
+
+            .info {
+                #title {
+                    @apply font-modern-negra md:text-3xl text-4xl text-red-600 lg:text-[#9B0209] lg:text-[clamp(24px,2.5vw,44px)] lg:leading-none;
+                }
+            }
+
+            .details {
+                @apply space-y-5 text-left lg:space-y-[1.2vw];
+
+                p {
+                    @apply md:text-base lg:text-[clamp(15px,1.4vw,24px)] lg:leading-snug;
+                }
+
+                .swatches {
+                    @apply flex items-center gap-3 lg:gap-[1vw];
+                }
+
+                .swatch {
+                    @apply size-6 rounded-full border border-black/20 cursor-pointer transition-transform duration-300 hover:scale-110
+                    lg:size-[clamp(18px,1.6vw,30px)];
+
+                    &.is-active {
+                        @apply ring-2 ring-[#9B0209] ring-offset-2 ring-offset-white scale-110 lg:ring-offset-1;
+                    }
+                }
+
+                .discover {
+                    @apply inline-block text-red-700 text-sm underline underline-offset-4 hover:opacity-70 transition-opacity
+                    lg:text-[#9B0209] lg:text-[clamp(13px,1.2vw,20px)];
+                }
+            }
+        }
+    }
+    #contact {
+        @apply relative md:mt-10 mt-0 px-4 text-center w-full overflow-hidden radial-gradient;
+
+        #f-left-leaf {
+            @apply absolute bottom-0 left-0 pointer-events-none lg:w-fit w-1/3;
+        }
+
+        #f-right-leaf {
+            @apply absolute top-0 right-0 pointer-events-none hidden lg:block;
+        }
+
+        .content {
+            @apply container mx-auto lg:py-14 2xl:py-32 py-16 flex flex-col justify-between gap-10 ;
+
+            h2 {
+                @apply lg:text-6xl 2xl:text-8xl text-5xl font-modern-negra md:translate-y-0 translate-y-5;
+            }
+
+            h3 {
+                @apply uppercase xl:text-base 2xl:text-lg text-base mb-2;
+            }
+
+            p {
+                @apply lg:text-2xl 2xl:text-3xl text-sm;
+            }
+        }
+
+        .drink-img {
+            @apply absolute bottom-0 right-0 lg:w-96 w-1/3 pointer-events-none;
+        }
+    }
+}
