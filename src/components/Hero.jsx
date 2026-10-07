@@ -75,7 +75,7 @@ const Hero = () => {
             />
 
             <div className="body">
-                <img src="/images-webp/arrow2.webp" alt="arrow" className="arrow h-30 w-5"/>
+                <img src="/images-webp/arrow2.webp" alt="arrow" className="arrow h-20 w-4 shrink-0 md:h-30 md:w-5"/>
 
                 <div className="content">
                     <div className="space-y-3">
