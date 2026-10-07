@@ -15,7 +15,7 @@ const CatalogueCta = () => {
         () => {
             const mm = gsap.matchMedia();
 
-            mm.add("(prefers-reduced-motion: no-preference)", () => {
+            mm.add("all", () => {   // "all" = always run, even if the phone has Reduce Motion on
                 const tl = gsap.timeline({
                     defaults: { ease: "power3.out" },
                     scrollTrigger: { trigger: root.current, start: "top 65%", toggleActions: "restart none restart reset" },
@@ -83,7 +83,7 @@ const CatalogueCta = () => {
                 </a>
 
                 <p className="cta-tags mt-7 text-[13px] text-black/70 lg:mt-[1.8vw] lg:text-[clamp(12px,1vw,17px)]">
-                    Web design <span className="mx-1">·</span> Interactive catalogues
+                    Web design <span className="mx-1">·</span> Interactive catalogues <span className="mx-1">·</span> E-commerce
                 </p>
             </div>
 

@@ -26,7 +26,6 @@ const Unit = ({ value, label }) => {
 
     useEffect(() => {
         if (first.current) { first.current = false; return; }
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         gsap.fromTo(
             numRef.current,
             { yPercent: 35, opacity: 0 },
@@ -60,7 +59,7 @@ const LaunchOffer = () => {
     useGSAP(() => {
         const mm = gsap.matchMedia();
 
-        mm.add("(prefers-reduced-motion: no-preference)", () => {
+        mm.add("all", () => {   // "all" = always run, even if the phone has Reduce Motion on
             gsap
                 .timeline({
                     defaults: { ease: "power3.out" },
@@ -98,7 +97,7 @@ const LaunchOffer = () => {
 
             <div className="offer-inner">
                 <div className="offer-text">
-                                       <h2 id="offer-heading" className="offer-title">
+                    <h2 id="offer-heading" className="offer-title">
                         <span className="mask"><span className="offer-pct">−20%</span></span>{" "}
                         <span className="mask"><span className="offer-off">OFF</span></span>
                         <span className="mask block"><span className="offer-sub">On All Bags</span></span>

@@ -159,7 +159,7 @@ const WaveSeparator = ({
         () => {
             const mm = gsap.matchMedia();
 
-            mm.add("(prefers-reduced-motion: no-preference)", () => {
+            mm.add("all", () => {   // "all" = always run, even if the phone has Reduce Motion on
                 // entry: strand draws first, ribbon is revealed horizontally, then both settle
                 // (when direction="left" the whole thing is mirrored, so the reveal mirrors with it)
                 const hidden = "inset(0 100% 0 0)";
