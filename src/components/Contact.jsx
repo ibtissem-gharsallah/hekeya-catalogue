@@ -31,8 +31,8 @@ const Contact = () => {
     })
     return (
        <footer id="contact" className="bg-[#F7F2EA]">
-         <img src="/images/hero-right-leaf.png" alt="leaf-right"  id="f-right-leaf" className="hidden md:block"/>
-         <img src="/images/hero-left-leaf.png" alt="leaf-left" id="f-left-leaf" className="hidden md:block"/>
+         <img src="/images-webp/hero-right-leaf.webp" alt="leaf-right"  id="f-right-leaf" className="hidden md:block"/>
+         <img src="/images-webp/hero-left-leaf.webp" alt="leaf-left" id="f-left-leaf" className="hidden md:block"/>
            <div className="content">
                <h2 className="text-[#9B0209]"> where to find me</h2>
 

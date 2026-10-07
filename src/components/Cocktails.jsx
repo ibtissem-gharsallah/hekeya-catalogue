@@ -45,15 +45,15 @@ const Cocktails = () => {
     })
     return (
         <section id="cocktails" >
-            <img src="/images/hook-left.png" alt="l-leaf" id="c-left-leaf" />
-            <img src="/images/hook-right.png" alt="r-leaf" id="c-right-leaf" />
+            <img src="/images-webp/hook-left.webp" alt="l-leaf" id="c-left-leaf" />
+            <img src="/images-webp/hook-right.webp" alt="r-leaf" id="c-right-leaf" />
 
             {/* ADDED: measuring tape, centered behind the list */}
             <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
                 <div className="tape-float">
                     <div className="tape-wrap">
                         {/* CHANGED: mobile height is now a % of the section (was h-[40vh]) so it stays centred on the list */}
-                        <img src="/images/tape.png" alt="" aria-hidden="true"
+                        <img src="/images-webp/tape.webp" alt="" aria-hidden="true"
                              className="h-[55%] md:h-[65%] max-h-[500px] w-auto drop-shadow-xl" />
                     </div>
                 </div>

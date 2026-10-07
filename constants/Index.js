@@ -30,17 +30,17 @@ const navLinks = [
 const socials = [
     {
         name: "Instagram",
-        icon: "/images/ig.jpg",
+        icon: "/images-webp/ig.webp",
         url: "#",
     },
     {
         name: "TikTok",
-        icon: "/images/tiktok.jpg",
+        icon: "/images-webp/tiktok.webp",
         url: "#",
     },
     {
         name: "Facebook",
-        icon: "/images/fc.jpg",
+        icon: "/images-webp/fc.webp",
         url: "#",
     },
 ];

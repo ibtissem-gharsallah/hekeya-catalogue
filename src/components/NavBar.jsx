@@ -25,7 +25,7 @@ const NavBar = () => {
             <div className="mx-2">
 
                 {/* CHANGED: logo image instead of the text */}
-                <img src="/images/hekeya-logo.png" alt="Hekeya" className="logo" />
+                <img src="/images-webp/hekeya-logo.webp" alt="Hekeya" className="logo" />
 
 
                 <ul>
