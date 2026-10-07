@@ -25,14 +25,25 @@ const fetchProducts = () => {
         request = (async () => {
             if (!supabase) throw new Error("Supabase env vars missing");
 
-            const { data, error } = await supabase
-                .from("products")
-                .select("*, product_colors(*)")
-                .order("sort_order")
-                .order("sort_order", { referencedTable: "product_colors" });
+            const [productsRes, settingsRes] = await Promise.all([
+                supabase
+                    .from("products")
+                    .select("*, product_colors(*)")
+                    .order("sort_order")
+                    .order("sort_order", { referencedTable: "product_colors" }),
+                // the on/off switch for the discount badge (a failure here never blocks the bags)
+                supabase.from("site_settings").select("discount_active, discount_percent").eq("id", 1).maybeSingle(),
+            ]);
 
+            const { data, error } = productsRes;
             if (error) throw error;
             if (!data?.length) throw new Error("No products returned");
+
+            const discount = {
+                active: settingsRes.data?.discount_active === true,
+                percent: settingsRes.data?.discount_percent ?? 20,
+            };
+            const num = (v) => (v == null ? null : Number(v));
 
             const sliderLists = data.map((p) => ({
                 id: p.id,
@@ -41,6 +52,8 @@ const fetchProducts = () => {
                 title: p.title,
                 description: p.description,
                 dimensions: { height: p.height, width: p.width },
+                oldPrice: num(p.old_price),
+                newPrice: num(p.new_price),
                 material: p.material,
                 colors: (p.product_colors || []).map((c) => ({
                     name: c.name,
@@ -49,10 +62,14 @@ const fetchProducts = () => {
                 })),
             }));
 
-            preloadImages(sliderLists);
+            // wait until the page itself has finished loading, so these downloads never slow the first view
+            const start = () => ("requestIdleCallback" in window ? requestIdleCallback(() => preloadImages(sliderLists), { timeout: 4000 }) : setTimeout(() => preloadImages(sliderLists), 1500));
+            if (document.readyState === "complete") start();
+            else window.addEventListener("load", start, { once: true });
 
             return {
                 sliderLists, // same shape Menu.jsx already uses
+                discount,    // { active, percent } from the site_settings table
                 // same shape Cocktails.jsx already uses
                 cocktailLists: data.map((p) => ({
                     name: p.name,
@@ -66,7 +83,7 @@ const fetchProducts = () => {
 };
 
 export default function useProducts() {
-    const [state, setState] = useState({ sliderLists: [], cocktailLists: [], loading: true, error: null });
+    const [state, setState] = useState({ sliderLists: [], cocktailLists: [], discount: { active: false, percent: 0 }, loading: true, error: null });
 
     useEffect(() => {
         let alive = true;
@@ -77,7 +94,7 @@ export default function useProducts() {
             .catch((err) => {
                 console.error("[useProducts] could not load products:", err);
                 request = null; // allow a retry on next mount
-                if (alive) setState({ sliderLists: [], cocktailLists: [], loading: false, error: err });
+                if (alive) setState({ sliderLists: [], cocktailLists: [], discount: { active: false, percent: 0 }, loading: false, error: err });
             });
         return () => { alive = false; };
     }, []);

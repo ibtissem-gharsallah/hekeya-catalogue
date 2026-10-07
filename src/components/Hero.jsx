@@ -87,7 +87,7 @@ const Hero = () => {
 
                     <div className="view-cocktails">
                         <p className="subtitle">
-                            Crafted slowly, with simple materials, careful details, and a little bit of personality
+                            Crafted slowly, with simple materials, careful details,<br/> and a little bit of personality
                             because your bag shouldn't feel like everyone else's.
                         </p>
                         <a href="#menu">Explore Bags</a>

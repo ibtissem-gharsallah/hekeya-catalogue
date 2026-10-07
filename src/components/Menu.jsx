@@ -3,7 +3,7 @@ import React, {useRef, useState} from 'react';
 import useProducts from "../hooks/useProducts.js";
 import {useGSAP} from "@gsap/react";
 import  gsap from "gsap";
-const MenuContent = ({ sliderLists }) => {
+const MenuContent = ({ sliderLists, discount }) => {
     const contentRef =useRef();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [colorIndex, setColorIndex] = useState(0);
@@ -25,7 +25,7 @@ const MenuContent = ({ sliderLists }) => {
             duration:1,
             ease:"power1.inOut"
         });
-        gsap.fromTo('.details p',{yPercent:100,opacity:0},{
+        gsap.fromTo('.details p, .bag-price, .bag-meta',{yPercent:100,opacity:0},{
             yPercent:0,opacity:1,ease:"power1.inOut"
         });
         gsap
@@ -38,8 +38,15 @@ const MenuContent = ({ sliderLists }) => {
                 },
             })
             .to(".m-right-leaf", { y: 200 }, 0)
-            .to(".m-left-leaf", { y: -200 }, 0)
-            .to(".recipe", { y: 100 }, 0);
+            .to(".m-left-leaf", { y: -200 }, 0);
+
+        // the text column drifts down while scrolling: desktop only.
+        // On phones it pushed the swatches out of the card (they got cut off).
+        gsap.matchMedia().add("(min-width: 1024px)", () => {
+            gsap.timeline({
+                scrollTrigger: { trigger: "#menu", start: "top top", end: "bottom top", scrub: true },
+            }).to(".recipe", { y: 100 }, 0);
+        });
     },[currentIndex])
 
     // ADDED: same leaf parallax as the Cocktails section (leaves slide in from the sides as you scroll)
@@ -97,6 +104,12 @@ const MenuContent = ({ sliderLists }) => {
     const nextCocktail = getCocktailAt(1)
     const colors = currentCocktail.colors || [];
     const currentImage = colors[colorIndex]?.image || currentCocktail.image;
+
+    // prices: with the discount ON -> old price crossed out + new price + badge; OFF -> just the regular (old) price
+    const { oldPrice, newPrice, dimensions } = currentCocktail;
+    const onSale = discount?.active && oldPrice != null && newPrice != null && newPrice < oldPrice;
+    const regularPrice = oldPrice ?? newPrice;
+    const money = (n) => `${n} DT`;
     return (
         <section id="menu" aria-labelledby="menu-heading">
             {/* CHANGED: yarn balls instead of leaves (still styled by #m-left-leaf / #m-right-leaf) */}
@@ -143,11 +156,31 @@ const MenuContent = ({ sliderLists }) => {
                             <p id="title">
                                 {currentCocktail.name}
                             </p>
+                            {(onSale || regularPrice != null) && (
+                                <div className="bag-price">
+                                    {onSale ? (
+                                        <>
+                                            <span className="price-old">{money(oldPrice)}</span>
+                                            <span className="price-new">{money(newPrice)}</span>
+                                            <span className="price-badge">−{discount.percent}% launch offer</span>
+                                        </>
+                                    ) : (
+                                        <span className="price-new">{money(regularPrice)}</span>
+                                    )}
+                                </div>
+                            )}
                         </div>
                         <div className="details">
                             <p>
                                 {currentCocktail.description}
                             </p>
+                            {(dimensions?.height || dimensions?.width) && (
+                                <div className="bag-meta">
+                                    {dimensions.height && <span>Height {dimensions.height}</span>}
+                                    {dimensions.height && dimensions.width && <span aria-hidden="true"> · </span>}
+                                    {dimensions.width && <span>Width {dimensions.width}</span>}
+                                </div>
+                            )}
                             {colors.length > 1 && (
                                 <div className="swatches" role="group" aria-label="Colours">
                                     {colors.map((color, i) => (
@@ -175,10 +208,10 @@ const MenuContent = ({ sliderLists }) => {
 
 // loads the bags from Supabase, then renders the original Menu untouched
 const Menu = () => {
-    const { sliderLists, loading } = useProducts();
+    const { sliderLists, loading, discount } = useProducts();
     // placeholder keeps #menu in the page (same height) while loading
     if (loading || !sliderLists.length) return <section id="menu" aria-busy="true" />;
-    return <MenuContent sliderLists={sliderLists} />;
+    return <MenuContent sliderLists={sliderLists} discount={discount} />;
 };
 
 export default Menu;
