@@ -47,6 +47,8 @@ const fetchProducts = () => {
 
             const sliderLists = data.map((p) => ({
                 id: p.id,
+                slug: p.slug,
+                featuredAt: p.featured_at ?? null,
                 name: p.name,
                 image: imageUrl(p.image_path),
                 title: p.title,
@@ -67,8 +69,15 @@ const fetchProducts = () => {
             if (document.readyState === "complete") start();
             else window.addEventListener("load", start, { once: true });
 
+            // the "new" bag for the Spotlight section = the one with the most recent featured_at
+            const featured =
+                sliderLists
+                    .filter((b) => b.featuredAt)
+                    .sort((a, b) => new Date(b.featuredAt) - new Date(a.featuredAt))[0] || null;
+
             return {
                 sliderLists, // same shape Menu.jsx already uses
+                featured,    // the bag shown in the Spotlight section (or null)
                 discount,    // { active, percent } from the site_settings table
                 // same shape Cocktails.jsx already uses
                 cocktailLists: data.map((p) => ({
@@ -83,7 +92,7 @@ const fetchProducts = () => {
 };
 
 export default function useProducts() {
-    const [state, setState] = useState({ sliderLists: [], cocktailLists: [], discount: { active: false, percent: 0 }, loading: true, error: null });
+    const [state, setState] = useState({ sliderLists: [], cocktailLists: [], featured: null, discount: { active: false, percent: 0 }, loading: true, error: null });
 
     useEffect(() => {
         let alive = true;
@@ -94,7 +103,7 @@ export default function useProducts() {
             .catch((err) => {
                 console.error("[useProducts] could not load products:", err);
                 request = null; // allow a retry on next mount
-                if (alive) setState({ sliderLists: [], cocktailLists: [], discount: { active: false, percent: 0 }, loading: false, error: err });
+                if (alive) setState({ sliderLists: [], cocktailLists: [], featured: null, discount: { active: false, percent: 0 }, loading: false, error: err });
             });
         return () => { alive = false; };
     }, []);

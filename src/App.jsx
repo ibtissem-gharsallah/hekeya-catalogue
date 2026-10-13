@@ -9,6 +9,7 @@ import Contact from "./components/Contact.jsx";
 import LaunchOffer from "./components/LaunchOffer.jsx";
 import WaveSeparator from "./components/WaveSeparator.jsx";
 import CatalogueCta from "./components/CatalogueCta.jsx";
+import Spotlight from "./components/Spotlight.jsx";
 gsap.registerPlugin(ScrollTrigger,SplitText);
 const App = () => {
     return (
@@ -17,6 +18,8 @@ const App = () => {
             <Hero/>
             <WaveSeparator/>
             <LaunchOffer/>
+            <WaveSeparator/>
+            <Spotlight/>
             <WaveSeparator/>
             <Cocktails/>
             <WaveSeparator/>
