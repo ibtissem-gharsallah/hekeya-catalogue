@@ -65,7 +65,7 @@ const SpotlightContent = ({ bag, discount }) => {
 
     return (
         <section id="spotlight" ref={root} aria-labelledby="spotlight-heading">
-            <img src="/images-webp/hero-right-leaf.webp" alt="" aria-hidden="true" className="sp-yarn" />
+            <img src="/images-webp/hero-right-leaf.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" className="sp-yarn" />
 
             <header className="sp-head">
                 <p className="sp-eyebrow">{t("spotlight.eyebrow")}</p>
@@ -80,7 +80,7 @@ const SpotlightContent = ({ bag, discount }) => {
                     <div className="sp-bag-wrap">
                         <div className="sp-bag-float">
                             {/* key = a new <img> per photo, so the previous colour never lingers while the next one loads */}
-                            <img key={image} className="sp-bag-img" src={image} alt={t("spotlight.bagAlt", { name: bag.name })} />
+                            <img key={image} className="sp-bag-img" decoding="async" src={image} alt={t("spotlight.bagAlt", { name: bag.name })} />
                         </div>
                     </div>
                 </div>
@@ -164,7 +164,9 @@ const SpotlightContent = ({ bag, discount }) => {
 // the newest bag comes from Supabase (the one with the most recent featured_at); nothing renders if there is none
 const Spotlight = () => {
     const { featured, discount, loading } = useProducts();
-    if (loading || !featured) return null;
+    // while loading, keep the section's space so nothing below jumps when the bag appears
+    if (loading) return <section id="spotlight" aria-hidden="true" className="min-h-[760px] lg:min-h-[48vw]" />;
+    if (!featured) return null;
     return <SpotlightContent bag={featured} discount={discount} />;
 };
 

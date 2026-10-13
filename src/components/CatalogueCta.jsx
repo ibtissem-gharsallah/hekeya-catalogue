@@ -115,7 +115,7 @@ const CatalogueCta = () => {
                 </div>
 
                 <div className="cta-ball-par absolute -right-[16vw] -bottom-[3vw] w-[40vw] lg:-right-[9vw] lg:bottom-[1vw] lg:w-[22vw]">
-                    <img src="/images/yarn-ball-cta.webp" alt="" className="cta-ball block w-full h-auto" style={{ filter: "saturate(0.8) brightness(0.96)" }} />
+                    <img src="/images/yarn-ball-cta.webp" alt="" loading="lazy" decoding="async" className="cta-ball block w-full h-auto" style={{ filter: "saturate(0.8) brightness(0.96)" }} />
                 </div>
             </div>
         </section>
