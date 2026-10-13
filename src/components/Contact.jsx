@@ -1,7 +1,7 @@
 import React from 'react';
 import { socials} from "../../constants/Index.js";
 import { useGSAP } from '@gsap/react'
-import { SplitText} from 'gsap/all';
+import { SplitText } from 'gsap/SplitText';
 import gsap from 'gsap';
 import { useT } from "../../i18n/LanguageContext.jsx";
 
@@ -34,8 +34,8 @@ const Contact = () => {
     }, { dependencies: [lang], revertOnUpdate: true })   // title is split again when the language changes
     return (
         <footer id="contact" className="bg-[#F7F2EA]">
-            <img src="/images-webp/hero-right-leaf.webp" alt="leaf-right"  id="f-right-leaf" className="hidden md:block"/>
-            <img src="/images-webp/hero-left-leaf.webp" alt="leaf-left" id="f-left-leaf" className="hidden md:block"/>
+            <img src="/images-webp/hero-right-leaf.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" id="f-right-leaf" className="hidden md:block"/>
+            <img src="/images-webp/hero-left-leaf.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" id="f-left-leaf" className="hidden md:block"/>
             <div className="content">
                 <h2 key={lang} className="text-[#9B0209]">{t("contact.title")}</h2>
 
@@ -56,7 +56,7 @@ const Contact = () => {
                                 rel="noopener noreferrer"
                                 aria-label={social.name}
                             >
-                                <img src={social.icon} alt="" aria-hidden="true" className="h-20 w-20"/>
+                                <img src={social.icon} alt="" aria-hidden="true" width="80" height="80" loading="lazy" decoding="async" className="h-20 w-20"/>
                             </a>
                         ))}
                     </div>

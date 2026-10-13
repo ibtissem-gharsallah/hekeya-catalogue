@@ -94,8 +94,8 @@ const LaunchOffer = () => {
 
     return (
         <section id="offer" ref={root} aria-labelledby="offer-heading">
-            <img src="/images/launch-yarn-rose.webp" alt="" aria-hidden="true" className="offer-yarn-rose" />
-            <img src="/images/launch-yarn-beige.webp" alt="" aria-hidden="true" className="offer-yarn-beige" />
+            <img src="/images/launch-yarn-rose.webp" alt="" aria-hidden="true" decoding="async" loading="lazy" className="offer-yarn-rose" />
+            <img src="/images/launch-yarn-beige.webp" alt="" aria-hidden="true" decoding="async" loading="lazy" className="offer-yarn-beige" />
 
             <div className="offer-inner">
                 <div className="offer-text">
@@ -134,7 +134,7 @@ const LaunchOffer = () => {
                 </div>
 
                 <div className="offer-visual">
-                    <img src="/images/launch-yarn.webp" alt={t("offer.imgAlt")} className="offer-yarn-main" />
+                    <img src="/images/launch-yarn.webp" alt={t("offer.imgAlt")} decoding="async" loading="lazy" className="offer-yarn-main" />
                 </div>
 
                 <div className="offer-note" aria-hidden="true">

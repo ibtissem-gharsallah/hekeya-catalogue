@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { SplitText } from "gsap/all";
+import { SplitText } from "gsap/SplitText";
 import { useT } from "../../i18n/LanguageContext.jsx";
 
 const Hero = () => {
@@ -26,9 +26,9 @@ const Hero = () => {
         // ADDED: yarn ball fades in after the title has appeared
         gsap.from(".yarn-ball", {
             opacity: 0,
-            duration: 1.5,
+            duration: 1,
             ease: "power1.inOut",
-            delay: 1.4,
+            delay: 0.4,
         });
 
         gsap
@@ -69,23 +69,30 @@ const Hero = () => {
 
             <img
                 src="/images-webp/hero-left-leaf.webp"
-                alt="left-leaf"
+                alt=""
+                aria-hidden="true"
+                decoding="async"
                 className="left-leaf"
             />
             <img
                 src="/images-webp/hero-right-leaf.webp"
-                alt="right-leaf"
+                alt=""
+                aria-hidden="true"
+                decoding="async"
                 className="right-leaf"
             />
 
             <img
                 src="/images-webp/yarn-ball.webp"
-                alt="yarn ball"
+                alt=""
+                aria-hidden="true"
+                fetchPriority="high"
+                decoding="async"
                 className="yarn-ball"
             />
 
             <div className="body">
-                <img src="/images-webp/arrow2.webp" alt="arrow" className="arrow h-20 w-4 shrink-0 md:h-30 md:w-5"/>
+                <img src="/images-webp/arrow2.webp" alt="" aria-hidden="true" className="arrow h-20 w-4 shrink-0 md:h-30 md:w-5"/>
 
                 <div className="content">
                     <div className="space-y-3">

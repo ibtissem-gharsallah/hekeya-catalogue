@@ -152,8 +152,8 @@ const MenuContent = ({ sliderLists, discount }) => {
     return (
         <section id="menu" aria-labelledby="menu-heading">
             {/* CHANGED: yarn balls instead of leaves (still styled by #m-left-leaf / #m-right-leaf) */}
-            <img src="/images/yarn-left.webp" alt="" aria-hidden="true" id="m-left-leaf" />
-            <img src="/images/yarn-right.webp" alt="" aria-hidden="true" id="m-right-leaf" />
+            <img src="/images/yarn-left.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" id="m-left-leaf" />
+            <img src="/images/yarn-right.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" id="m-right-leaf" />
             {/* CHANGED: visible heading (was sr-only) */}
             <header className="menu-head">
                 <p>{t("menu.eyebrow")}</p>
@@ -172,12 +172,12 @@ const MenuContent = ({ sliderLists, discount }) => {
                 <div className="arrows">
                     <button className="text-left" onClick={() => goToSlide(currentIndex - 1)}>
                         <span>{prevCocktail.name}</span>
-                        <img src="/images-webp/right-arrow.webp" alt="right-arrow" aria-hidden="true" />
+                        <img src="/images-webp/right-arrow.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
                     </button>
 
                     <button className="text-left" onClick={() => goToSlide(currentIndex + 1)}>
                         <span>{nextCocktail.name}</span>
-                        <img src="/images-webp/left-arrow.webp" alt="left-arrow" aria-hidden="true" />
+                        <img src="/images-webp/left-arrow.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" />
                     </button>
 
                 </div>
@@ -187,7 +187,7 @@ const MenuContent = ({ sliderLists, discount }) => {
                         <span>{currentCocktail.name}</span>
                     </div>
                     {/* key = new <img> per photo, so the previous bag never lingers while the next one downloads */}
-                    <img key={currentImage} className="object-contain" src={currentImage} alt={currentCocktail.name}/>
+                    <img key={currentImage} className="object-contain" src={currentImage} alt={currentCocktail.name} decoding="async"/>
                     {/* desktop: swatches under the bag photo */}
                     {renderSwatches("hidden lg:flex")}
                 </div>
@@ -238,7 +238,7 @@ const MenuContent = ({ sliderLists, discount }) => {
 const Menu = () => {
     const { sliderLists, loading, discount } = useProducts();
     // placeholder keeps #menu in the page (same height) while loading
-    if (loading || !sliderLists.length) return <section id="menu" aria-busy="true" />;
+    if (loading || !sliderLists.length) return <section id="menu" aria-busy="true" className="min-h-[680px] lg:min-h-0" />;
     return <MenuContent sliderLists={sliderLists} discount={discount} />;
 };
 
