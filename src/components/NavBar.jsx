@@ -2,7 +2,10 @@ import React from 'react';
 import {navLinks} from "../../constants/Index.js";
 import {useGSAP} from "@gsap/react";
 import gsap from "gsap";
+import { useT } from "../../i18n/LanguageContext.jsx";
+import LanguageSwitcher from "../../i18n/LanguageSwitcher.jsx";
 const NavBar = () => {
+    const { t } = useT();
     useGSAP(()=>{
         const navTween=gsap.timeline({
             scrollTrigger:{
@@ -13,8 +16,7 @@ const NavBar = () => {
         navTween.fromTo("nav",{
                 backgroundColor:"rgb(247,242,234)"},
             {
-                backgroundColor:"rgba(247,242,234,0.55)",
-                backgroundFilter:"blur(50px)",
+                backgroundColor:"rgb(247,242,234)",
                 duration:1,
                 ease:"power1.inOut"
 
@@ -32,10 +34,11 @@ const NavBar = () => {
                     {navLinks.map((link) => (
                         <li key={link.id}>
                             {/* FIXED: was `#{link.id}` (missing the $), so it linked to the literal text "#{link.id}" */}
-                            <a className="text-black" href={`#${link.id}`}>{link.title}</a>
+                            <a className="text-black" href={`#${link.id}`}>{t(`nav.${link.id}`)}</a>
 
                         </li>
                     ))}
+                    <li><LanguageSwitcher /></li>
                 </ul>
             </div>
         </nav>

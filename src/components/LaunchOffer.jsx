@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useT } from "../../i18n/LanguageContext.jsx";
 
 /* Offer ends October 31, 2026 at 23:59:59 Tunisia time (Africa/Tunis = UTC+1, no daylight saving) */
 const TARGET = new Date("2026-10-31T23:59:59+01:00").getTime();
@@ -42,6 +43,7 @@ const Unit = ({ value, label }) => {
 };
 
 const LaunchOffer = () => {
+    const { t } = useT();
     const root = useRef(null);
     // undefined = not mounted yet (renders 00, so no layout shift), null = offer ended
     const [left, setLeft] = useState(undefined);
@@ -98,35 +100,32 @@ const LaunchOffer = () => {
             <div className="offer-inner">
                 <div className="offer-text">
                     <h2 id="offer-heading" className="offer-title">
-                        <span className="mask"><span className="offer-pct">−20%</span></span>{" "}
-                        <span className="mask"><span className="offer-off">OFF</span></span>
-                        <span className="mask block"><span className="offer-sub">On All Bags</span></span>
+                        <span className="mask"><span className="offer-pct">{t("offer.pct")}</span></span>{" "}
+                        <span className="mask"><span className="offer-off">{t("offer.off")}</span></span>
+                        <span className="mask block"><span className="offer-sub">{t("offer.sub")}</span></span>
                     </h2>
 
                     <p className="offer-script">
-                        Until the end of October.
+                        {t("offer.script")}
                         <svg viewBox="0 0 340 10" preserveAspectRatio="none" aria-hidden="true">
                             <path d="M2 7 C 90 2, 210 9, 338 3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
                         </svg>
                     </p>
 
                     <div className="offer-copy">
-                        <p>
-                            To celebrate the launch of the Hekeya catalogue,
-                            enjoy 20% off every bag until the end of October.
-                        </p>
-                        <p>Every piece is handmade to order.</p>
+                        <p>{t("offer.copy1")}</p>
+                        <p>{t("offer.copy2")}</p>
                     </div>
 
-                    <div className="offer-count" role="timer" aria-label="Time left to enjoy the launch offer">
+                    <div className="offer-count" role="timer" aria-label={t("offer.timerLabel")}>
                         {left === null ? (
-                            <p className="offer-ended">OFFER ENDED</p>
+                            <p className="offer-ended">{t("offer.ended")}</p>
                         ) : (
                             <>
-                                <Unit value={pad(left?.days ?? 0)} label="Days" />
-                                <Unit value={pad(left?.hours ?? 0)} label="Hours" />
-                                <Unit value={pad(left?.minutes ?? 0)} label="Minutes" />
-                                <Unit value={pad(left?.seconds ?? 0)} label="Seconds" />
+                                <Unit value={pad(left?.days ?? 0)} label={t("offer.days")} />
+                                <Unit value={pad(left?.hours ?? 0)} label={t("offer.hours")} />
+                                <Unit value={pad(left?.minutes ?? 0)} label={t("offer.minutes")} />
+                                <Unit value={pad(left?.seconds ?? 0)} label={t("offer.seconds")} />
                             </>
                         )}
                     </div>
@@ -135,11 +134,11 @@ const LaunchOffer = () => {
                 </div>
 
                 <div className="offer-visual">
-                    <img src="/images/launch-yarn.webp" alt="A ball of black handmade yarn" className="offer-yarn-main" />
+                    <img src="/images/launch-yarn.webp" alt={t("offer.imgAlt")} className="offer-yarn-main" />
                 </div>
 
                 <div className="offer-note" aria-hidden="true">
-                    <span>Same quality.<br />Better vibes.<br />−20%</span>
+                    <span>{t("offer.note1")}<br />{t("offer.note2")}<br />{t("offer.note3")}</span>
                     <svg viewBox="0 0 60 70" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M48 4 C 50 28, 38 48, 12 60 M12 60 l10 -1 M12 60 l4 -9" />
                     </svg>

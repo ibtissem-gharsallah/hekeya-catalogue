@@ -3,8 +3,12 @@ import React, {useRef, useState} from 'react';
 import useProducts from "../hooks/useProducts.js";
 import {useGSAP} from "@gsap/react";
 import  gsap from "gsap";
+import { useT } from "../../i18n/LanguageContext.jsx";
 const MenuContent = ({ sliderLists, discount }) => {
+    const { t, tr, colorName } = useT();
     const contentRef =useRef();
+    const enterFrom = useRef(-100);   // side the new photo slides in from (-100 = left, 100 = right)
+    const touch = useRef(null);       // finger position when a swipe starts
     const [currentIndex, setCurrentIndex] = useState(0);
     const [colorIndex, setColorIndex] = useState(0);
     useGSAP(()=>{
@@ -17,7 +21,7 @@ const MenuContent = ({ sliderLists, discount }) => {
         });
         gsap.fromTo('.cocktail img',{
             opacity:0,
-            xPercent:-100,
+            xPercent:enterFrom.current,
 
         },{
             xPercent:0,
@@ -91,11 +95,28 @@ const MenuContent = ({ sliderLists, discount }) => {
     },[colorIndex])
 
     const totalCocktails= sliderLists.length;
-    const goToSlide = (index) => {
+    const goToSlide = (index, from = -100) => {
+        enterFrom.current = from;
         const  newIndex=(index+totalCocktails)%totalCocktails;
         setCurrentIndex(newIndex);
         setColorIndex(0);
     }
+    // swipe on phones: left = next bag, right = previous bag (the arrows still work too)
+    const onTouchStart = (e) => {
+        const t = e.touches[0];
+        touch.current = { x: t.clientX, y: t.clientY };
+    };
+    const onTouchEnd = (e) => {
+        if (!touch.current) return;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touch.current.x;
+        const dy = t.clientY - touch.current.y;
+        touch.current = null;
+        // must be a clear horizontal swipe (so normal vertical scrolling never changes the bag)
+        if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+        if (dx < 0) goToSlide(currentIndex + 1, 100);
+        else goToSlide(currentIndex - 1, -100);
+    };
     const getCocktailAt= (indexOffset)=>{
         return sliderLists[(currentIndex+indexOffset+totalCocktails)%totalCocktails];
     }
@@ -110,6 +131,24 @@ const MenuContent = ({ sliderLists, discount }) => {
     const onSale = discount?.active && oldPrice != null && newPrice != null && newPrice < oldPrice;
     const regularPrice = oldPrice ?? newPrice;
     const money = (n) => `${n} DT`;
+
+    // the same swatches are rendered twice: under the description on phones, under the bag photo on desktop
+    const renderSwatches = (extraClass) =>
+        colors.length > 1 && (
+            <div className={`swatches ${extraClass}`} role="group" aria-label={t("menu.colours")}>
+                {colors.map((color, i) => (
+                    <button
+                        key={color.name}
+                        type="button"
+                        aria-label={colorName(color.name)}
+                        aria-pressed={i === colorIndex}
+                        onClick={() => setColorIndex(i)}
+                        style={{ backgroundColor: color.hex }}
+                        className={`swatch ${i === colorIndex ? 'is-active' : ''}`}
+                    />
+                ))}
+            </div>
+        );
     return (
         <section id="menu" aria-labelledby="menu-heading">
             {/* CHANGED: yarn balls instead of leaves (still styled by #m-left-leaf / #m-right-leaf) */}
@@ -117,10 +156,10 @@ const MenuContent = ({ sliderLists, discount }) => {
             <img src="/images/yarn-right.webp" alt="" aria-hidden="true" id="m-right-leaf" />
             {/* CHANGED: visible heading (was sr-only) */}
             <header className="menu-head">
-                <p>Our Bags</p>
-                <h2 id="menu-heading">Find Your Hekeya</h2>
+                <p>{t("menu.eyebrow")}</p>
+                <h2 id="menu-heading">{t("menu.title")}</h2>
             </header>
-            <nav className="cocktail-tabs text-black" aria-label="Cocktail Navigation">
+            <nav className="cocktail-tabs text-black" aria-label={t("menu.navLabel")}>
                 {sliderLists.map((cocktail, index) => {
                     const isActive= index === currentIndex;
                     return (
@@ -129,7 +168,7 @@ const MenuContent = ({ sliderLists, discount }) => {
                     )
                 })}
             </nav>
-            <div className="content">
+            <div className="content" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
                 <div className="arrows">
                     <button className="text-left" onClick={() => goToSlide(currentIndex - 1)}>
                         <span>{prevCocktail.name}</span>
@@ -149,6 +188,8 @@ const MenuContent = ({ sliderLists, discount }) => {
                     </div>
                     {/* key = new <img> per photo, so the previous bag never lingers while the next one downloads */}
                     <img key={currentImage} className="object-contain" src={currentImage} alt={currentCocktail.name}/>
+                    {/* desktop: swatches under the bag photo */}
+                    {renderSwatches("hidden lg:flex")}
                 </div>
                 <div className="recipe">
                     <div className="recipe-inner">
@@ -162,7 +203,7 @@ const MenuContent = ({ sliderLists, discount }) => {
                                         <>
                                             <span className="price-old">{money(oldPrice)}</span>
                                             <span className="price-new">{money(newPrice)}</span>
-                                            <span className="price-badge">−{discount.percent}% launch offer</span>
+                                            <span className="price-badge">{t("menu.badge", { percent: discount.percent })}</span>
                                         </>
                                     ) : (
                                         <span className="price-new">{money(regularPrice)}</span>
@@ -172,30 +213,17 @@ const MenuContent = ({ sliderLists, discount }) => {
                         </div>
                         <div className="details">
                             <p>
-                                {currentCocktail.description}
+                                {tr(currentCocktail, "description")}
                             </p>
                             {(dimensions?.height || dimensions?.width) && (
                                 <div className="bag-meta">
-                                    {dimensions.height && <span>Height {dimensions.height}</span>}
+                                    {dimensions.height && <span>{t("menu.height")} {dimensions.height}</span>}
                                     {dimensions.height && dimensions.width && <span aria-hidden="true"> · </span>}
-                                    {dimensions.width && <span>Width {dimensions.width}</span>}
+                                    {dimensions.width && <span>{t("menu.width")} {dimensions.width}</span>}
                                 </div>
                             )}
-                            {colors.length > 1 && (
-                                <div className="swatches" role="group" aria-label="Colours">
-                                    {colors.map((color, i) => (
-                                        <button
-                                            key={color.name}
-                                            type="button"
-                                            aria-label={color.name}
-                                            aria-pressed={i === colorIndex}
-                                            onClick={() => setColorIndex(i)}
-                                            style={{ backgroundColor: color.hex }}
-                                            className={`swatch ${i === colorIndex ? 'is-active' : ''}`}
-                                        />
-                                    ))}
-                                </div>
-                            )}
+                            {/* phones: swatches under the description */}
+                            {renderSwatches("lg:hidden")}
 
                         </div>
                     </div>

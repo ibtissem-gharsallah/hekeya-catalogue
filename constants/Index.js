@@ -1,27 +1,22 @@
+// link titles live in i18n/en.js and i18n/fr.js  ->  nav.<id>
 const navLinks = [
     {
         id: "hero",
-        title: "About Us",
     },
     {
-        id: "offre",
-        title: "Discount",
+        id: "offer",
     },
     {
         id: "cocktails",
-        title: "TimeLine",
     },
     {
         id: "menu",
-        title: "Bags",
     },
     {
         id: "contact",
-        title: "Contact",
     },
     {
         id: "catalogue-cta",
-        title: "Catalogue",
     },
 ];
 
@@ -48,5 +43,5 @@ const socials = [
 
 export {
     navLinks,
-   socials,
+    socials,
 };

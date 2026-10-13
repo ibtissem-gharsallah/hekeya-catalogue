@@ -2,9 +2,11 @@ import React from 'react';
 import useProducts from "../hooks/useProducts.js";
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap';
+import { useT } from "../../i18n/LanguageContext.jsx";
 const Cocktails = () => {
     // CHANGED: list now comes from Supabase (was imported from constants/Index.js)
     const { cocktailLists } = useProducts();
+    const { t, tr } = useT();
 
     useGSAP(() => {
         const parallaxTimeline = gsap.timeline({
@@ -61,16 +63,16 @@ const Cocktails = () => {
 
             <div className="list justify-center">
                 <div className="popular">
-                    <h2 className="text-center py-2 text-red-800 text-bold">Worth The Wait:</h2>
+                    <h2 className="text-center py-2 text-red-800 text-bold">{t("cocktails.title")}</h2>
 
                     <ul>
-                        {cocktailLists.map(({ name,  detail, price }) => (
-                            <li key={name}>
+                        {cocktailLists.map((item) => (
+                            <li key={item.name}>
                                 <div className="md:me-28">
-                                    <h3 className="text-red-700">{name}</h3>
-                                    <p> {detail}</p>
+                                    <h3 className="text-red-700">{item.name}</h3>
+                                    <p> {tr(item, "detail")}</p>
                                 </div>
-                                <span> {price}</span>
+                                <span> {tr(item, "price")}</span>
                             </li>
                         ))}
                     </ul>
