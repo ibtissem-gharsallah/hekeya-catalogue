@@ -1,11 +1,13 @@
 import React, { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useT } from "../../i18n/LanguageContext.jsx";
 import useProducts from "../hooks/useProducts.js";
 
 const money = (n) => `${n} DT`;
 
 const SpotlightContent = ({ bag, discount }) => {
+    const { t, tr, colorName } = useT();
     const root = useRef(null);
     const firstColorRun = useRef(true);
     const [colorIndex, setColorIndex] = useState(0);
@@ -66,10 +68,10 @@ const SpotlightContent = ({ bag, discount }) => {
             <img src="/images-webp/hero-right-leaf.webp" alt="" aria-hidden="true" className="sp-yarn" />
 
             <header className="sp-head">
-                <p className="sp-eyebrow">The Weekly Spotlight</p>
+                <p className="sp-eyebrow">{t("spotlight.eyebrow")}</p>
                 <span className="sp-rule" aria-hidden="true" />
                 <h2 id="spotlight-heading" className="sp-title">
-                    <span className="sp-mask"><span className="sp-title-in block">Meet the new obsession.</span></span>
+                    <span className="sp-mask"><span className="sp-title-in block">{t("spotlight.title")}</span></span>
                 </h2>
             </header>
 
@@ -78,13 +80,13 @@ const SpotlightContent = ({ bag, discount }) => {
                     <div className="sp-bag-wrap">
                         <div className="sp-bag-float">
                             {/* key = a new <img> per photo, so the previous colour never lingers while the next one loads */}
-                            <img key={image} className="sp-bag-img" src={image} alt={`${bag.name} bag`} />
+                            <img key={image} className="sp-bag-img" src={image} alt={t("spotlight.bagAlt", { name: bag.name })} />
                         </div>
                     </div>
                 </div>
 
                 <div className="sp-text">
-                    <p className="sp-kicker">New arrival · {bag.name}</p>
+                    <p className="sp-kicker">{t("spotlight.kicker", { name: bag.name })}</p>
                     <h3 className="sp-name">
                         <span className="sp-mask"><span className="sp-name-in block">{bag.name}</span></span>
                     </h3>
@@ -95,7 +97,7 @@ const SpotlightContent = ({ bag, discount }) => {
                                 <>
                                     <span className="price-old">{money(oldPrice)}</span>
                                     <span className="price-new">{money(newPrice)}</span>
-                                    <span className="price-badge">−{discount.percent}% launch offer</span>
+                                    <span className="price-badge">{t("menu.badge", { percent: discount.percent })}</span>
                                 </>
                             ) : (
                                 <span className="price-new">{money(regularPrice)}</span>
@@ -103,23 +105,23 @@ const SpotlightContent = ({ bag, discount }) => {
                         </div>
                     )}
 
-                    {bag.description && <p className="sp-desc sp-fade">{bag.description}</p>}
+                    {tr(bag, "description") && <p className="sp-desc sp-fade">{tr(bag, "description")}</p>}
 
                     {(dimensions?.height || dimensions?.width) && (
                         <p className="sp-meta sp-fade">
-                            {dimensions.height && <span>Height {dimensions.height}</span>}
+                            {dimensions.height && <span>{t("menu.height")} {dimensions.height}</span>}
                             {dimensions.height && dimensions.width && <span aria-hidden="true"> · </span>}
-                            {dimensions.width && <span>Width {dimensions.width}</span>}
+                            {dimensions.width && <span>{t("menu.width")} {dimensions.width}</span>}
                         </p>
                     )}
 
                     {colors.length > 1 && (
-                        <div className="sp-swatches" role="group" aria-label="Colours">
+                        <div className="sp-swatches" role="group" aria-label={t("menu.colours")}>
                             {colors.map((color, i) => (
                                 <button
                                     key={color.name}
                                     type="button"
-                                    aria-label={color.name}
+                                    aria-label={colorName(color.name)}
                                     aria-pressed={i === colorIndex}
                                     onClick={() => setColorIndex(i)}
                                     style={{ backgroundColor: color.hex }}
@@ -130,13 +132,13 @@ const SpotlightContent = ({ bag, discount }) => {
                     )}
 
                     <a href="#menu" className="sp-cta sp-fade">
-                        Meet {bag.name}
+                        {t("spotlight.meet", { name: bag.name })}
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                             <path d="M4 12h16M14 6l6 6-6 6" />
                         </svg>
                     </a>
 
-                    <p className="sp-tagline sp-fade">Made by hand, made to be yours.</p>
+                    <p className="sp-tagline sp-fade">{t("spotlight.tagline")}</p>
                 </div>
             </div>
 

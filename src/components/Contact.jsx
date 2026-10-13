@@ -3,8 +3,11 @@ import { socials} from "../../constants/Index.js";
 import { useGSAP } from '@gsap/react'
 import { SplitText} from 'gsap/all';
 import gsap from 'gsap';
+import { useT } from "../../i18n/LanguageContext.jsx";
 
 const Contact = () => {
+    const { t, lang } = useT();
+
     useGSAP(() => {
         const titleSplit = SplitText.create('#contact h2', { type: 'words' });
 
@@ -28,38 +31,38 @@ const Contact = () => {
             }).to('#f-left-leaf', {
             y: '-50', duration: 1, ease: 'power1.inOut'
         }, '<')
-    })
+    }, { dependencies: [lang], revertOnUpdate: true })   // title is split again when the language changes
     return (
-       <footer id="contact" className="bg-[#F7F2EA]">
-         <img src="/images-webp/hero-right-leaf.webp" alt="leaf-right"  id="f-right-leaf" className="hidden md:block"/>
-         <img src="/images-webp/hero-left-leaf.webp" alt="leaf-left" id="f-left-leaf" className="hidden md:block"/>
-           <div className="content">
-               <h2 className="text-[#9B0209]"> where to find me</h2>
+        <footer id="contact" className="bg-[#F7F2EA]">
+            <img src="/images-webp/hero-right-leaf.webp" alt="leaf-right"  id="f-right-leaf" className="hidden md:block"/>
+            <img src="/images-webp/hero-left-leaf.webp" alt="leaf-left" id="f-left-leaf" className="hidden md:block"/>
+            <div className="content">
+                <h2 key={lang} className="text-[#9B0209]">{t("contact.title")}</h2>
 
 
-               <div>
-                   <h3>Contact Us</h3>
-                   <p>hekeya.store@gmail.com</p>
-               </div>
-               <div>
-                   <h3>Socials</h3>
+                <div>
+                    <h3>{t("contact.contactUs")}</h3>
+                    <p>hekeya.store@gmail.com</p>
+                </div>
+                <div>
+                    <h3>{t("contact.socials")}</h3>
 
-                   <div className="flex-center gap-5">
-                       {socials.map((social) => (
-                           <a
-                               key={social.name}
-                               href={social.url}
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               aria-label={social.name}
-                           >
-                               <img src={social.icon} alt="img" className="h-20 w-20"/>
-                           </a>
-                       ))}
-                   </div>
-               </div>
-           </div>
-       </footer>
+                    <div className="flex-center gap-5">
+                        {socials.map((social) => (
+                            <a
+                                key={social.name}
+                                href={social.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={social.name}
+                            >
+                                <img src={social.icon} alt="" aria-hidden="true" className="h-20 w-20"/>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </footer>
     );
 };
 

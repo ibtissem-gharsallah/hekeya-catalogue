@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-
+import { useT } from "../../i18n/LanguageContext.jsx";
 /*
   "Want a catalogue like this?" call-to-action section.
   The button links to the section with id="contact".
@@ -9,6 +9,7 @@ import gsap from "gsap";
   Needs: /images/yarn-ball-cta.webp   (font-numerals is the Abril Fatface token already in your index.css)
 */
 const CatalogueCta = () => {
+    const { t } = useT();
     const root = useRef(null);
 
     useGSAP(
@@ -52,7 +53,7 @@ const CatalogueCta = () => {
         >
             <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center text-center lg:max-w-none">
                 <p className="cta-eyebrow text-[11px] uppercase tracking-[0.32em] text-[#9B0209] lg:text-[clamp(11px,0.95vw,16px)]">
-                    Like what you see?
+                    {t("cta.eyebrow")}
                 </p>
                 <span className="cta-rule mt-5 block h-px w-12 bg-[#9B0209] lg:mt-[1.6vw] lg:w-[3.4vw]" />
 
@@ -61,29 +62,29 @@ const CatalogueCta = () => {
                     className="font-numerals mt-8 text-[#9B0209] leading-[0.98] tracking-[-0.01em] text-[13vw] sm:text-7xl lg:mt-[2.4vw] lg:text-[6.4vw]"
                 >
                     <span className="block overflow-hidden pb-[0.12em] -mb-[0.12em]">
-                        <span className="cta-line block">Want a catalogue</span>
+                        <span className="cta-line block">{t("cta.line1")}</span>
                     </span>
                     <span className="block overflow-hidden pb-[0.12em] -mb-[0.12em]">
-                        <span className="cta-line block">like this?</span>
+                        <span className="cta-line block">{t("cta.line2")}</span>
                     </span>
                 </h2>
 
                 <p className="cta-sub font-serif mt-6 text-[#9B0209] text-[7vw] leading-tight sm:text-4xl lg:mt-[1.8vw] lg:text-[2.7vw]">
-                    Let’s make yours.
+                    {t("cta.sub")}
                 </p>
 
                 <a
                     href="#contact"
                     className="cta-btn group mt-9 inline-flex items-center gap-4 rounded-full border border-[#9B0209] px-9 py-4 text-sm uppercase tracking-[0.24em] text-[#9B0209] transition-colors duration-300 hover:bg-[#9B0209] hover:text-[#f7f2ea] lg:mt-[2.8vw] lg:gap-[1.2vw] lg:px-[3vw] lg:py-[1.25vw] lg:text-[clamp(12px,0.95vw,16px)]"
                 >
-                    Contact me
+                    {t("cta.button")}
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1.5">
                         <path d="M4 12h16M14 6l6 6-6 6" />
                     </svg>
                 </a>
 
                 <p className="cta-tags mt-7 text-[13px] text-black/70 lg:mt-[1.8vw] lg:text-[clamp(12px,1vw,17px)]">
-                    Web design <span className="mx-1">·</span> Interactive catalogues <span className="mx-1">·</span> E-commerce
+                    {t("cta.tag1")} <span className="mx-1">·</span> {t("cta.tag2")} <span className="mx-1">·</span> {t("cta.tag3")}
                 </p>
             </div>
 

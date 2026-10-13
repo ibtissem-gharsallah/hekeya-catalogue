@@ -1,15 +1,16 @@
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { SplitText } from "gsap/all";
+import { useT } from "../../i18n/LanguageContext.jsx";
 
 const Hero = () => {
+    const { t, lang } = useT();
+    const firstRun = useRef(true);
+
     useGSAP(() => {
         const heroSplit = new SplitText(".title", {
             type: "chars, words",
-        });
-
-        const paragraphSplit = new SplitText(".subtitle", {
-            type: "lines",
         });
 
         // Apply text-gradient class once before animating
@@ -20,15 +21,6 @@ const Hero = () => {
             duration: 1.8,
             ease: "expo.out",
             stagger: 0.06,
-        });
-
-        gsap.from(paragraphSplit.lines, {
-            opacity: 0,
-            yPercent: 100,
-            duration: 1.8,
-            ease: "expo.out",
-            stagger: 0.06,
-            delay: 1,
         });
 
         // ADDED: yarn ball fades in after the title has appeared
@@ -52,6 +44,24 @@ const Hero = () => {
             .to(".left-leaf", { y: -200 }, 0)
             .to(".arrow", { y: 100 }, 0);
     }, []);
+
+    // the two text blocks are split into lines again every time the language changes
+    // (they are re-created with key={lang}, so React never touches the split markup)
+    useGSAP(() => {
+        const paragraphSplit = new SplitText(".subtitle", {
+            type: "lines",
+        });
+
+        gsap.from(paragraphSplit.lines, {
+            opacity: 0,
+            yPercent: 100,
+            duration: 1.8,
+            ease: "expo.out",
+            stagger: 0.06,
+            delay: firstRun.current ? 1 : 0,
+        });
+        firstRun.current = false;
+    }, { dependencies: [lang], revertOnUpdate: true });
 
     return (
         <section id="hero">
@@ -80,17 +90,16 @@ const Hero = () => {
                 <div className="content">
                     <div className="space-y-3">
                         <p className="hidden md:block"></p>
-                        <p className="subtitle text-red-800">
-                            Made To Be Carried <br /> Made To Be Yours
+                        <p key={lang} className="subtitle text-red-800">
+                            {t("hero.tagline1")} <br /> {t("hero.tagline2")}
                         </p>
                     </div>
 
                     <div className="view-cocktails">
-                        <p className="subtitle">
-                            Crafted slowly, with simple materials, careful details,<br/> and a little bit of personality
-                            because your bag shouldn't feel like everyone else's.
+                        <p key={lang} className="subtitle">
+                            {t("hero.body1")}<br/> {t("hero.body2")}
                         </p>
-                        <a href="#menu">Explore Bags</a>
+                        <a href="#menu">{t("hero.explore")}</a>
                     </div>
                 </div>
             </div>

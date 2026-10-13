@@ -3,7 +3,9 @@ import React, {useRef, useState} from 'react';
 import useProducts from "../hooks/useProducts.js";
 import {useGSAP} from "@gsap/react";
 import  gsap from "gsap";
+import { useT } from "../../i18n/LanguageContext.jsx";
 const MenuContent = ({ sliderLists, discount }) => {
+    const { t, tr, colorName } = useT();
     const contentRef =useRef();
     const enterFrom = useRef(-100);   // side the new photo slides in from (-100 = left, 100 = right)
     const touch = useRef(null);       // finger position when a swipe starts
@@ -133,12 +135,12 @@ const MenuContent = ({ sliderLists, discount }) => {
     // the same swatches are rendered twice: under the description on phones, under the bag photo on desktop
     const renderSwatches = (extraClass) =>
         colors.length > 1 && (
-            <div className={`swatches ${extraClass}`} role="group" aria-label="Colours">
+            <div className={`swatches ${extraClass}`} role="group" aria-label={t("menu.colours")}>
                 {colors.map((color, i) => (
                     <button
                         key={color.name}
                         type="button"
-                        aria-label={color.name}
+                        aria-label={colorName(color.name)}
                         aria-pressed={i === colorIndex}
                         onClick={() => setColorIndex(i)}
                         style={{ backgroundColor: color.hex }}
@@ -154,10 +156,10 @@ const MenuContent = ({ sliderLists, discount }) => {
             <img src="/images/yarn-right.webp" alt="" aria-hidden="true" id="m-right-leaf" />
             {/* CHANGED: visible heading (was sr-only) */}
             <header className="menu-head">
-                <p>Our Bags</p>
-                <h2 id="menu-heading">Find Your Hekeya</h2>
+                <p>{t("menu.eyebrow")}</p>
+                <h2 id="menu-heading">{t("menu.title")}</h2>
             </header>
-            <nav className="cocktail-tabs text-black" aria-label="Cocktail Navigation">
+            <nav className="cocktail-tabs text-black" aria-label={t("menu.navLabel")}>
                 {sliderLists.map((cocktail, index) => {
                     const isActive= index === currentIndex;
                     return (
@@ -201,7 +203,7 @@ const MenuContent = ({ sliderLists, discount }) => {
                                         <>
                                             <span className="price-old">{money(oldPrice)}</span>
                                             <span className="price-new">{money(newPrice)}</span>
-                                            <span className="price-badge">−{discount.percent}% launch offer</span>
+                                            <span className="price-badge">{t("menu.badge", { percent: discount.percent })}</span>
                                         </>
                                     ) : (
                                         <span className="price-new">{money(regularPrice)}</span>
@@ -211,13 +213,13 @@ const MenuContent = ({ sliderLists, discount }) => {
                         </div>
                         <div className="details">
                             <p>
-                                {currentCocktail.description}
+                                {tr(currentCocktail, "description")}
                             </p>
                             {(dimensions?.height || dimensions?.width) && (
                                 <div className="bag-meta">
-                                    {dimensions.height && <span>Height {dimensions.height}</span>}
+                                    {dimensions.height && <span>{t("menu.height")} {dimensions.height}</span>}
                                     {dimensions.height && dimensions.width && <span aria-hidden="true"> · </span>}
-                                    {dimensions.width && <span>Width {dimensions.width}</span>}
+                                    {dimensions.width && <span>{t("menu.width")} {dimensions.width}</span>}
                                 </div>
                             )}
                             {/* phones: swatches under the description */}
