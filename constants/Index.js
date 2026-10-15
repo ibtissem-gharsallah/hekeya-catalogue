@@ -26,17 +26,17 @@ const socials = [
     {
         name: "Instagram",
         icon: "/images-webp/ig.webp",
-        url: "#",
+        url: "https://www.instagram.com/hekeya.store?cplk=Y2g5cTFjNXRzbnd2&utm_source=qr",
     },
     {
         name: "TikTok",
         icon: "/images-webp/tiktok.webp",
-        url: "#",
+        url: "https://www.tiktok.com/@hekeya_store?_r=1&_t=ZS-9Aa1TSIzIHq",
     },
     {
         name: "Facebook",
         icon: "/images-webp/fc.webp",
-        url: "#",
+        url: "https://www.facebook.com/profile.php?id=61593991200196&mibextid=wwXIfr&mibextid=wwXIfr",
     },
 ];
 
