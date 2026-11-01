@@ -99,4 +99,30 @@ export default {
         camel: "Camel",
         nude: "Nude",
     },
+    care: {
+        title: "Hekeya Care",
+        intro1: "Chaque sac Hekeya est fait main avec amour, et nous voulons que vous en profitiez longtemps.",
+        intro2: "Si vous remarquez une maille défaite, un défaut de finition ou un défaut de fabrication, contactez-nous simplement. Nous nous occupons de la réparation, gratuitement.",
+        pill: "Parce que notre relation ne s’arrête pas à la livraison de votre commande. ♡",
+        covered: {
+            title: "Ce qui est couvert ?",
+            items: [
+                "Mailles lâches ou défaites",
+                "Anses qui se détachent à cause d’une mauvaise fixation",
+                "Finitions défectueuses",
+                "Défauts liés à la fabrication",
+            ],
+        },
+        notCovered: {
+            title: "Ce qui n’est pas couvert ?",
+            items: [
+                "Coupures ou déchirures causées par des objets tranchants",
+                "Dommages dus à une mauvaise utilisation",
+                "Usure normale",
+                "Dommages causés par des accidents",
+            ],
+        },
+        btnTitle: "Un problème ?",
+        btnSub: "Contactez-nous, nous sommes là pour vous aider ♡",
+    },
 };
