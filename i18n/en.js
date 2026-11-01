@@ -78,4 +78,30 @@ export default {
 
     // colour names are matched in lower case; English just shows the name from the database
     colors: {},
+    care: {
+        title: "Hekeya Care",
+        intro1: "Every Hekeya bag is handmade with love, and we want you to enjoy yours for a long time.",
+        intro2: "If you notice a loose stitch, a finishing issue, or a craftsmanship defect, just get in touch with us. We’ll take care of the repair, free of charge.",
+        pill: "Because our relationship doesn’t end when your order arrives. ♡",
+        covered: {
+            title: "What’s covered?",
+            items: [
+                "Loose or undone stitches",
+                "Handles coming loose due to faulty attachment",
+                "Defective finishing",
+                "Craftsmanship-related defects",
+            ],
+        },
+        notCovered: {
+            title: "What’s not covered?",
+            items: [
+                "Cuts or tears caused by sharp objects",
+                "Damage caused by misuse",
+                "Normal wear and tear",
+                "Damage caused by accidents",
+            ],
+        },
+        btnTitle: "Have an issue?",
+        btnSub: "Contact us, we’re here to help ♡",
+    },
 };

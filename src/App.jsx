@@ -11,6 +11,7 @@ import LaunchOffer from "./components/LaunchOffer.jsx";
 import WaveSeparator from "./components/WaveSeparator.jsx";
 import CatalogueCta from "./components/CatalogueCta.jsx";
 import Spotlight from "./components/Spotlight.jsx";
+import Care from "./components/Care.jsx";
 gsap.registerPlugin(ScrollTrigger,SplitText);
 const App = () => {
     return (
@@ -18,13 +19,13 @@ const App = () => {
             <NavBar/>
             <Hero/>
             <WaveSeparator/>
-            <LaunchOffer/>
-            <WaveSeparator/>
             <Spotlight/>
             <WaveSeparator/>
             <Cocktails/>
             <WaveSeparator/>
             <Menu/>
+            <WaveSeparator/>
+            <Care/>
             <WaveSeparator/>
             <CatalogueCta/>
             <WaveSeparator/>
