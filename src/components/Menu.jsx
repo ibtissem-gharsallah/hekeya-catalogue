@@ -1,5 +1,6 @@
 "use client"
 import React, {useRef, useState} from 'react';
+import { Link } from "react-router-dom";
 import useProducts from "../hooks/useProducts.js";
 import {useGSAP} from "@gsap/react";
 import  gsap from "gsap";
@@ -224,6 +225,7 @@ const MenuContent = ({ sliderLists, discount }) => {
                             )}
                             {/* phones: swatches under the description */}
                             {renderSwatches("lg:hidden")}
+                            <Link to={`/bag/${currentCocktail.slug ?? currentCocktail.id}`} className="discover">{t("menu.discover")}</Link>
 
                         </div>
                     </div>

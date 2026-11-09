@@ -1,5 +1,4 @@
 // Français. Same keys as en.js. If a key is missing here, the English text is shown instead.
-// " " = non-breaking space (French puts a space before : ? ! and %)
 export default {
     nav: {
         hero: "À propos",
@@ -56,6 +55,7 @@ export default {
         width: "Largeur",
         badge: "−{percent} % offre de lancement",
         colours: "Couleurs",
+        discover: "View details"
     },
 
     spotlight: {
@@ -124,5 +124,36 @@ export default {
         },
         btnTitle: "Un problème ?",
         btnSub: "Contactez-nous, nous sommes là pour vous aider ♡",
+    },
+    keychains: {
+        eyebrow: "Petits porte-bonheur",
+        title: "Porte-clés",
+        sub: "Petits détails, grande personnalité.",
+        prev: "Porte-clés précédent",
+        next: "Porte-clés suivant",
+        slideLabel: "Porte-clés {current} sur {total}",
+        imgAlt: "Porte-clés {name}",
+        view: "View details",
+    },
+    product: {
+        kindBag: "Sacs",
+        kindKeychain: "Porte-clés",
+        backBag: "Tous les sacs",
+        backKeychain: "Tous les porte-clés",
+        colour: "Couleur",
+        material: "Matière",
+        leadTime: "Délai de réalisation",
+        order: "Commander",
+        orderSubject: "Commande : {name}",
+        orderBody: "Bonjour Hekeya,\n\nJe souhaite commander {name}{variant}.\n\nMerci !",
+        care: "Réparations gratuites avec Hekeya Care ♡",
+        prev: "Précédent",
+        next: "Suivant",
+        notFound: "Nous n’avons pas trouvé cette pièce.",
+        photos: "Photos",
+        photoLabel: "Photo {n}",
+        photoAlt: "{name}, photo {n} sur {total}",
+        prevPhoto: "Photo précédente",
+        nextPhoto: "Photo suivante",
     },
 };

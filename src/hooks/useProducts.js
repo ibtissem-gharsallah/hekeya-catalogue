@@ -54,7 +54,9 @@ const fetchProducts = () => {
                 image: imageUrl(p.image_path),
                 title: p.title,
                 description: p.description,
-                fr: { description: p.description_fr },   // French texts (empty -> English is shown)
+                detail: p.detail,                         // used by the product page
+                leadTime: p.lead_time,
+                fr: { description: p.description_fr, detail: p.detail_fr, leadTime: p.lead_time_fr },   // French texts (empty -> English is shown)
                 dimensions: { height: p.height, width: p.width },
                 oldPrice: num(p.old_price),
                 newPrice: num(p.new_price),

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useT } from "../../i18n/LanguageContext.jsx";
@@ -131,12 +132,12 @@ const SpotlightContent = ({ bag, discount }) => {
                         </div>
                     )}
 
-                    <a href="#menu" className="sp-cta sp-fade">
+                    <Link to={`/bag/${bag.slug ?? bag.id}`} className="sp-cta sp-fade">
                         {t("spotlight.meet", { name: bag.name })}
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                             <path d="M4 12h16M14 6l6 6-6 6" />
                         </svg>
-                    </a>
+                    </Link>
 
                     <p className="sp-tagline sp-fade">{t("spotlight.tagline")}</p>
                 </div>
