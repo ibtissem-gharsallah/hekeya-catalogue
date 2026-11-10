@@ -1,9 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useT } from "../../i18n/LanguageContext.jsx";
 import useKeychains from "../hooks/useKeychains.js";
+import OrderSheet from "./OrderSheet.jsx";
+import buildOrder from "./orderMessage.js";
 
 /*
   Keychains section: a clothesline with the keychain cards hanging from it.
@@ -14,8 +17,10 @@ import useKeychains from "../hooks/useKeychains.js";
   - text lives in i18n/en.js and i18n/fr.js  ->  keychains.*
 */
 
-const SIDE_SCALE = 0.74;   // size of the two cards behind the selected one
+const SIDE_SCALE = 0.66;   // size of the two cards behind the selected one
+const SIDE_BLUR = 2.2;     // how blurry they are (px)
 const SAG = 60;            // how much the line hangs in the middle (the rope drawing is 100 units tall)
+const CUSTOM_CARD_PRICE = 5;   // price of the custom design card (DT)
 const money = (n) => `${n} DT`;
 
 /* wooden clothes-peg that holds each card on the line */
@@ -69,10 +74,11 @@ const Photo = ({ src, alt }) => {
 };
 
 const KeychainsContent = ({ items }) => {
-    const { t, tr } = useT();
+    const { t } = useT();
     const root = useRef(null);
     const stage = useRef(null);
     const [active, setActive] = useState(0);
+    const [orderItem, setOrderItem] = useState(null);   // the keychain whose "Order now" sheet is open
 
     const n = items.length;
     const activeRef = useRef(0);          // latest value for the resize observer
@@ -109,7 +115,7 @@ const KeychainsContent = ({ items }) => {
         slots.forEach((slot, i) => {
             const d = offsetOf(i, activeRef.current);
             const visible = Math.abs(d) <= 1;
-            const to = { x: d * step, y: hangY(d * step), scale: d === 0 ? 1 : SIDE_SCALE, opacity: visible ? 1 : 0 };
+            const to = { x: d * step, y: hangY(d * step), scale: d === 0 ? 1 : SIDE_SCALE, opacity: visible ? 1 : 0, filter: `blur(${d === 0 ? 0 : SIDE_BLUR}px)` };
             const was = prevOffsets.current[i];
             prevOffsets.current[i] = d;
 
@@ -120,7 +126,7 @@ const KeychainsContent = ({ items }) => {
                 return;
             }
             // a card that wraps from one side to the other fades in from behind instead of flying across
-            if (was != null && Math.abs(d - was) > 1) gsap.set(slot, { x: d * step * 1.5, y: hangY(d * step * 1.5), scale: 0.6, opacity: 0 });
+            if (was != null && Math.abs(d - was) > 1) gsap.set(slot, { x: d * step * 1.5, y: hangY(d * step * 1.5), scale: 0.5, opacity: 0 });
             gsap.to(slot, { ...to, duration: 0.9, ease: "power3.inOut", overwrite: "auto" });
 
             // little swing, like something hanging from a line that was just nudged
@@ -151,6 +157,8 @@ const KeychainsContent = ({ items }) => {
             place(false);
 
             const startIdle = () => {
+                // the badge wobbles a tiny bit, like a tag in the wind
+                gsap.fromTo(".kc-badge-in", { rotation: -1.4 }, { rotation: 1.4, duration: 3.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
                 gsap.utils.toArray(".kc-card").forEach((card, i) => {
                     gsap.fromTo(
                         card,
@@ -168,6 +176,7 @@ const KeychainsContent = ({ items }) => {
                 .from(".kc-eyebrow", { opacity: 0, y: 16, duration: 0.8 })
                 .from(".kc-title", { opacity: 0, y: 24, duration: 0.9 }, "-=0.5")
                 .from(".kc-sub", { opacity: 0, y: 16, duration: 0.8 }, "-=0.6")
+                .from(".kc-badge-in", { opacity: 0, scale: 0.6, rotation: -8, duration: 0.9, ease: "back.out(2.2)" }, "-=0.4")
                 .fromTo(".kc-rope", { clipPath: "inset(0 0 0 100%)" }, { clipPath: "inset(0 0 0 0%)", duration: 1.4, ease: "power2.inOut" }, "-=0.5")
                 .from(".kc-sway", { y: -70, opacity: 0, rotation: (i) => (i % 2 ? 9 : -9), duration: 1.5, ease: "elastic.out(1, 0.45)", stagger: { each: 0.18, from: "center" } }, "-=0.7")
                 .from(".kc-controls", { opacity: 0, y: 12, duration: 0.6 }, "-=0.8")
@@ -238,6 +247,19 @@ const KeychainsContent = ({ items }) => {
                 <p className="kc-sub font-serif mt-3 text-lg italic text-[#9B0209]/80 lg:mt-[0.8vw] lg:text-[clamp(15px,1.3vw,22px)]">
                     {t("keychains.sub")}
                 </p>
+
+                {/* badge: custom design card */}
+                <div className="kc-badge mt-6 flex justify-center lg:mt-[1.6vw]">
+                    <div className="kc-badge-in inline-flex items-center gap-3 rounded-full border-2 border-dashed border-[#9B0209]/60 bg-[#fffaf6] py-2 pl-5 pr-2 shadow-[0_0.6rem_1.2rem_-0.6rem_rgba(106,3,9,0.45)] lg:gap-[0.9vw] lg:py-[0.5vw] lg:pl-[1.6vw] lg:pr-[0.5vw]">
+                        <span className="text-left text-[11px] font-semibold uppercase leading-tight tracking-[0.16em] text-[#9B0209] lg:text-[clamp(11px,0.85vw,15px)]">
+                            {t("keychains.custom")}
+                            <span className="block font-normal normal-case tracking-normal text-[#9B0209]/75 lg:text-[clamp(11px,0.8vw,14px)]">{t("keychains.customNote", { price: CUSTOM_CARD_PRICE })}</span>
+                        </span>
+                        <span className="font-numerals flex size-12 shrink-0 items-center justify-center rounded-full bg-[#9B0209] text-center text-[15px] leading-none text-[#f7f2ea] lg:size-[clamp(48px,3.6vw,66px)] lg:text-[clamp(15px,1.2vw,21px)]">
+                            +{CUSTOM_CARD_PRICE}<span className="ml-0.5 text-[0.6em]">DT</span>
+                        </span>
+                    </div>
+                </div>
             </header>
 
             {/* the carousel: line on top, cards hanging from it */}
@@ -253,9 +275,9 @@ const KeychainsContent = ({ items }) => {
                 onWheel={onWheel}
                 onKeyDown={onKeyDown}
                 className="relative -mx-5 mt-10 touch-pan-y select-none overflow-x-clip outline-none lg:mx-0 lg:mt-[2.4vw]
-                           [--w:clamp(190px,56vw,300px)] lg:[--w:clamp(230px,19vw,370px)]
+                           [--w:clamp(160px,46vw,250px)] lg:[--w:clamp(230px,19vw,370px)]
                            [--rh:38px] lg:[--rh:70px]
-                           h-[calc(var(--w)*2.15+50px+var(--rh)*0.6)]"
+                           h-[calc(var(--w)*2.05+50px+var(--rh)*0.6)]"
             >
                 {/* the clothesline: a twisted cord that hangs in the middle (drawn from the right) */}
                 <div className="kc-rope pointer-events-none absolute inset-x-0 top-[14px] z-[5] h-[var(--rh)]" aria-hidden="true">
@@ -272,7 +294,6 @@ const KeychainsContent = ({ items }) => {
                 {items.map((item, i) => {
                     const d = offsetOf(i, active);
                     const isActive = d === 0;
-                    const { height, width } = item.dimensions;
                     return (
                         <div
                             key={item.id}
@@ -298,23 +319,23 @@ const KeychainsContent = ({ items }) => {
                                     {/* info square */}
                                     <div className="mt-[0.9em] rounded-[1.1em] bg-[#8a0610] px-[1.1em] py-[1em] text-center text-[#f7f2ea] shadow-[0_0.8em_1.4em_-0.8em_rgba(106,3,9,0.6)]">
                                         <h3 className="font-modern-negra text-[1.9em] uppercase leading-none">{item.name}</h3>
-                                        {(height || width) && (
-                                            <p className="mt-[0.6em] text-[0.8em] uppercase tracking-[0.08em] text-[#f7f2ea]/70">
-                                                {height && <span>{t("menu.height")} {height}</span>}
-                                                {height && width && <span aria-hidden="true"> · </span>}
-                                                {width && <span>{t("menu.width")} {width}</span>}
-                                            </p>
-                                        )}
                                         {item.price != null && (
                                             <p className="font-numerals mt-[0.5em] text-[1.7em] leading-none">{money(item.price)}</p>
                                         )}
-                                        {tr(item, "description") && (
-                                            <p className="mt-[0.6em] line-clamp-2 text-[0.85em] leading-snug text-[#f7f2ea]/85">{tr(item, "description")}</p>
-                                        )}
+                                        {/* buttons only on the selected card */}
                                         {isActive && (
-                                            <Link to={`/keychain/${item.slug}`} className="mt-[0.9em] inline-block text-[0.8em] uppercase tracking-[0.18em] text-[#f7f2ea] underline underline-offset-4 hover:opacity-80">
-                                                {t("keychains.view")}
-                                            </Link>
+                                            <div className="mt-[1em] flex flex-col items-center gap-[0.8em]">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setOrderItem(item)}
+                                                    className="cursor-pointer rounded-full bg-[#f7f2ea] px-[1.6em] py-[0.65em] text-[0.8em] font-medium uppercase tracking-[0.18em] text-[#8a0610] transition-colors duration-300 hover:bg-white"
+                                                >
+                                                    {t("product.order")}
+                                                </button>
+                                                <Link to={`/keychain/${item.slug}`} className="text-[0.75em] uppercase tracking-[0.18em] text-[#f7f2ea] underline underline-offset-4 hover:opacity-80">
+                                                    {t("keychains.view")}
+                                                </Link>
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -350,6 +371,22 @@ const KeychainsContent = ({ items }) => {
                     </div>
                     <Arrow dir="next" label={t("keychains.next")} onClick={() => go(1)} className="flex lg:hidden" />
                 </div>
+            )}
+
+            {/* "Order now" sheet: rendered in <body>, outside the carousel, so swiping and moving cards never touch it */}
+            {orderItem && createPortal(
+                <OrderSheet
+                    {...buildOrder({
+                        t,
+                        name: orderItem.name,
+                        slug: orderItem.slug,
+                        kindPath: "keychain",
+                        price: orderItem.price,
+                        dimensions: orderItem.dimensions,
+                    })}
+                    onClose={() => setOrderItem(null)}
+                />,
+                document.body
             )}
 
             {/* screen readers hear which keychain is selected */}

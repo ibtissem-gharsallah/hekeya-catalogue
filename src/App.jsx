@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Routes, Route, useLocation } from "react-router-dom";
 import gsap from 'gsap';
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
+import { anchorId } from "../constants/Index.js";
 import NavBar from "./components/NavBar.jsx";
 import Hero from "./components/Hero.jsx";
 import Cocktails from "./components/Cocktails.jsx";
@@ -16,24 +17,30 @@ import Keychains from "./components/Keychains.jsx";
 import { BagPage, KeychainPage } from "./components/ProductPage.jsx";
 gsap.registerPlugin(ScrollTrigger,SplitText);
 
-// new page -> back to the top; a link like /#contact -> scroll to that section
+// new page -> back to the top; a link like /#bags -> scroll to that section
 const ScrollManager = () => {
     const { pathname, hash, key } = useLocation();
+    const lastPath = useRef(null);
     useEffect(() => {
+        const newPage = lastPath.current !== pathname;   // a link inside the same page changes nothing in the page height
+        lastPath.current = pathname;
         let tries = 0;
         let timer;
+        let raf;
         if (hash) {
             const go = () => {
-                const el = document.getElementById(hash.slice(1));
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-                else if (tries++ < 20) timer = setTimeout(go, 100);   // section not rendered yet (data loading)
+                const el = document.getElementById(anchorId(hash.slice(1)));
+                if (el) {
+                    // recalculate the scroll animations BEFORE scrolling: doing it during the scroll cancels it
+                    if (newPage) ScrollTrigger.refresh();
+                    el.scrollIntoView({ behavior: "smooth" });
+                } else if (tries++ < 20) timer = setTimeout(go, 100);   // section not rendered yet (data loading)
             };
             go();
         } else {
             window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+            if (newPage) raf = requestAnimationFrame(() => ScrollTrigger.refresh());
         }
-        // the new page has a different height: recalculate every scroll animation
-        const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
         return () => { clearTimeout(timer); cancelAnimationFrame(raf); };
     }, [pathname, hash, key]);
     return null;

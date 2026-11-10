@@ -36,8 +36,8 @@ const NavBar = () => {
                 <ul>
                     {navLinks.map((link) => (
                         <li key={link.id}>
-                            {/* FIXED: was `#{link.id}` (missing the $), so it linked to the literal text "#{link.id}" */}
-                            <Link className="text-black" to={`/#${link.id}`}>{t(`nav.${link.id}`)}</Link>
+                            {/* the address bar shows the nice name (/#bags); App.jsx turns it back into the section id */}
+                            <Link className="text-black" to={`/#${link.slug}`}>{t(`nav.${link.id}`)}</Link>
 
                         </li>
                     ))}

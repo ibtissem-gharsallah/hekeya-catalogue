@@ -7,6 +7,7 @@ export default {
         menu: "Sacs",
         contact: "Contact",
         "catalogue-cta": "Catalogue",
+        keychains: "Porte-clés",
     },
 
     hero: {
@@ -134,6 +135,9 @@ export default {
         slideLabel: "Porte-clés {current} sur {total}",
         imgAlt: "Porte-clés {name}",
         view: "View details",
+        custom: "Carte personnalisée",
+        customNote: "Votre propre design sur la carte, seulement {price} DT",
+
     },
     product: {
         kindBag: "Sacs",

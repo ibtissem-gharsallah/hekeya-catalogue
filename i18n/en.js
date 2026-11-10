@@ -7,6 +7,7 @@ export default {
         menu: "Bags",
         contact: "Contact",
         "catalogue-cta": "Catalogue",
+        keychains: "Keychains",
     },
 
     hero: {
@@ -114,6 +115,9 @@ export default {
         slideLabel: "Keychain {current} of {total}",
         imgAlt: "{name} keychain",
         view: "Voir le produit",
+        custom: "Custom design card",
+        customNote: "Your own design on the card, only {price} DT",
+
 
     },
     product: {
