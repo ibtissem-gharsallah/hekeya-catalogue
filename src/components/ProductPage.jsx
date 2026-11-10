@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useT } from "../../i18n/LanguageContext.jsx";
 import useProducts from "../hooks/useProducts.js";
 import useKeychains from "../hooks/useKeychains.js";
+import OrderSheet from "./OrderSheet.jsx";
+import { CONTACT_EMAIL } from "../../constants/contact.js";
 
 /*
   Product page, one for bags (/bag/:slug) and one for keychains (/keychain/:slug).
@@ -13,7 +15,6 @@ import useKeychains from "../hooks/useKeychains.js";
   - text lives in i18n/en.js and i18n/fr.js  ->  product.*
 */
 
-const CONTACT_EMAIL = "hekeya.store@gmail.com";
 const money = (n) => `${n} DT`;
 
 const KINDS = {
@@ -36,7 +37,14 @@ const ProductView = ({ item, items, kind, discount }) => {
     const firstColorRun = useRef(true);
     const dir = useRef(1);
     const drag = useRef(null);
-    const [photoIndex, setPhotoIndex] = useState(0);
+    const [params] = useSearchParams();
+    const [orderOpen, setOrderOpen] = useState(false);
+    // a link like /bag/rosa?color=pink opens on that colour
+    const [photoIndex, setPhotoIndex] = useState(() => {
+        const wanted = params.get("color")?.toLowerCase();
+        const i = wanted ? (item.colors || []).findIndex((c) => String(c.name).toLowerCase() === wanted) : -1;
+        return i >= 0 ? i : 0;
+    });
 
     const colors = item.colors || [];
     // the photos: a bag has one per colour, a keychain has its own gallery (one photo or more)
@@ -72,10 +80,23 @@ const ProductView = ({ item, items, kind, discount }) => {
     const next = items.length > 1 ? items[(index + 1) % items.length] : null;
     const linkTo = (p) => `/${cfg.path}/${p.slug ?? p.id}`;
 
-    // order by e-mail: the message already contains the product and the chosen colour
-    const subject = t("product.orderSubject", { name: item.name });
-    const body = t("product.orderBody", { name: item.name, variant: colourLabel ? ` (${colourLabel})` : "" });
-    const orderHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // the order message: product, colour, price, size and a link that opens this exact colour
+    const sizeText = [dimensions?.height && `${t("menu.height")} ${dimensions.height}`, dimensions?.width && `${t("menu.width")} ${dimensions.width}`].filter(Boolean).join(" · ");
+    const priceNow = onSale ? newPrice : regularPrice;
+    const productUrl = `${window.location.origin}/${cfg.path}/${item.slug ?? item.id}${colors[photoIndex] ? `?color=${encodeURIComponent(String(colors[photoIndex].name).toLowerCase())}` : ""}`;
+    const message = [
+        t("order.msg.hello"),
+        t("order.msg.intro"),
+        "",
+        `• ${t("order.msg.product", { name: item.name })}`,
+        colourLabel ? `• ${t("order.msg.colour", { colour: colourLabel })}` : false,
+        priceNow != null ? `• ${t("order.msg.price", { price: money(priceNow) })}` : false,
+        sizeText ? `• ${t("order.msg.size", { size: sizeText })}` : false,
+        `• ${t("order.msg.link", { url: productUrl })}`,
+        "",
+        t("order.msg.thanks"),
+    ].filter((line) => line !== false).join("\n");
+    const emailHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t("product.orderSubject", { name: item.name }))}&body=${encodeURIComponent(message)}`;
 
     // browser tab title
     useEffect(() => {
@@ -327,13 +348,14 @@ const ProductView = ({ item, items, kind, discount }) => {
                         </div>
                     )}
 
-                    <a
-                        href={orderHref}
-                        className="pv-fade group mt-8 inline-flex items-center gap-4 rounded-full bg-[#9B0209] px-9 py-4 text-sm uppercase tracking-[0.22em] text-[#f7f2ea] transition-colors duration-300 hover:bg-[#6f0107] lg:mt-[2.4vw] lg:gap-[1.1vw] lg:px-[2.6vw] lg:py-[1.15vw] lg:text-[clamp(12px,0.9vw,16px)]"
+                    <button
+                        type="button"
+                        onClick={() => setOrderOpen(true)}
+                        className="pv-fade group mt-8 inline-flex cursor-pointer items-center gap-4 rounded-full bg-[#9B0209] px-9 py-4 text-sm uppercase tracking-[0.22em] text-[#f7f2ea] transition-colors duration-300 hover:bg-[#6f0107] lg:mt-[2.4vw] lg:gap-[1.1vw] lg:px-[2.6vw] lg:py-[1.15vw] lg:text-[clamp(12px,0.9vw,16px)]"
                     >
                         {t("product.order")}
                         <ArrowIcon className="w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
-                    </a>
+                    </button>
 
                     <Link to="/#care" className="pv-fade font-serif mt-5 text-base italic text-[#9B0209] underline-offset-4 hover:underline lg:mt-[1.2vw] lg:text-[clamp(14px,1.1vw,19px)]">
                         {t("product.care")}
@@ -360,6 +382,8 @@ const ProductView = ({ item, items, kind, discount }) => {
                     </Link>
                 </nav>
             )}
+
+            {orderOpen && <OrderSheet message={message} emailHref={emailHref} onClose={() => setOrderOpen(false)} />}
         </section>
     );
 };
