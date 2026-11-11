@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useT } from "../../i18n/LanguageContext.jsx";
+import { FACEBOOK_PAGE } from "../../constants/contact.js";
 
 /*
   "Order now" sheet: explains why orders go through a chat, shows the ready-to-send message,
@@ -100,6 +101,7 @@ const OrderSheet = ({ message, emailHref, onClose }) => {
 
     const points = [t("order.point1"), t("order.point2"), t("order.point3")];
     const steps = [t("order.step1"), t("order.step2"), t("order.step3")];
+    const fbHref = FACEBOOK_PAGE ? `https://m.me/${FACEBOOK_PAGE}?text=${encodeURIComponent(message)}` : null;
 
     return (
         <div ref={root} className="fixed inset-0 z-[60] flex items-end justify-center md:items-center md:p-6" onKeyDown={onKeyDown}>
@@ -166,12 +168,22 @@ const OrderSheet = ({ message, emailHref, onClose }) => {
                     <span className="sr-only" aria-live="polite">{copied ? t("order.copied") : ""}</span>
                 </div>
 
-                {/* where to send it: plain text, no buttons */}
-                <div className="os-item mt-6 rounded-2xl bg-[#9B0209]/[0.07] p-4 text-center">
-                    <p className="text-[15px] leading-snug text-[#3a0a10]">{t("order.sendText")}</p>
-                    <p className="mt-2 font-serif text-lg text-[#9B0209]">{t("order.sendWhere")}</p>
+                {/* where to send it: Messenger opens with the text already filled; Instagram cannot, so it is plain text */}
+                <div className="os-item mt-6 flex flex-col gap-3">
+                    {fbHref && (
+                        <a
+                            href={fbHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group flex items-center justify-center gap-3 rounded-full bg-[#9B0209] px-6 py-3.5 text-sm font-medium tracking-wide text-[#f7f2ea] transition-colors duration-300 hover:bg-[#6f0107]"
+                        >
+                            <img src="/images-webp/fc.webp" alt="" aria-hidden="true" width="26" height="26" className="size-6 rounded-md" />
+                            {t("order.fb")}
+                        </a>
+                    )}
+                    <p className="text-center text-[14px] leading-snug text-black/70">{t("order.igText")}</p>
                 </div>
-                <a href={emailHref} className="os-item mt-4 block text-center font-serif text-base italic text-[#9B0209] underline-offset-4 hover:underline">{t("order.email")}</a>
+                <a href={emailHref} className="os-item mt-5 block text-center font-serif text-base italic text-[#9B0209] underline-offset-4 hover:underline">{t("order.email")}</a>
             </div>
         </div>
     );

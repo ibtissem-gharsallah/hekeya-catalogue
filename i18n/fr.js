@@ -192,5 +192,6 @@ export default {
         },
         sendText: "Il ne reste qu'à nous envoyer ce message sur Instagram ou Messenger.",
         sendWhere: "@hekeya.store sur Instagram · Hekeya sur Messenger",
+        igText: "Vous préférez Instagram ? Copiez le message ci-dessus et envoyez-le à @hekeya.store.",
     },
 };
