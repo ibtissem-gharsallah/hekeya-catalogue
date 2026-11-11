@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import {navLinks} from "../../constants/Index.js";
 import {useGSAP} from "@gsap/react";
 import gsap from "gsap";
@@ -27,14 +28,16 @@ const NavBar = () => {
             <div className="mx-2">
 
                 {/* CHANGED: logo image instead of the text */}
-                <img src="/images-webp/hekeya-logo.webp" alt="Hekeya" className="logo" />
+                <Link to="/" aria-label="Hekeya">
+                    <img src="/images-webp/hekeya-logo.webp" alt="Hekeya" className="logo" />
+                </Link>
 
 
                 <ul>
                     {navLinks.map((link) => (
                         <li key={link.id}>
-                            {/* FIXED: was `#{link.id}` (missing the $), so it linked to the literal text "#{link.id}" */}
-                            <a className="text-black" href={`#${link.id}`}>{t(`nav.${link.id}`)}</a>
+                            {/* the address bar shows the nice name (/#bags); App.jsx turns it back into the section id */}
+                            <Link className="text-black" to={`/#${link.slug}`}>{t(`nav.${link.id}`)}</Link>
 
                         </li>
                     ))}

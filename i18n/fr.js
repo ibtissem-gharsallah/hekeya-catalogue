@@ -1,5 +1,4 @@
 // Français. Same keys as en.js. If a key is missing here, the English text is shown instead.
-// " " = non-breaking space (French puts a space before : ? ! and %)
 export default {
     nav: {
         hero: "À propos",
@@ -8,6 +7,7 @@ export default {
         menu: "Sacs",
         contact: "Contact",
         "catalogue-cta": "Catalogue",
+        keychains: "Porte-clés",
     },
 
     hero: {
@@ -56,6 +56,7 @@ export default {
         width: "Largeur",
         badge: "−{percent} % offre de lancement",
         colours: "Couleurs",
+        discover: "View details"
     },
 
     spotlight: {
@@ -124,5 +125,70 @@ export default {
         },
         btnTitle: "Un problème ?",
         btnSub: "Contactez-nous, nous sommes là pour vous aider ♡",
+    },
+    keychains: {
+        eyebrow: "Petits porte-bonheur",
+        title: "Porte-clés",
+        sub: "Petits détails, grande personnalité.",
+        prev: "Porte-clés précédent",
+        next: "Porte-clés suivant",
+        slideLabel: "Porte-clés {current} sur {total}",
+        imgAlt: "Porte-clés {name}",
+        view: "View details",
+        custom: "En option : votre carte personnalisée",
+        customNote: "Chaque porte-clés est livré avec sa carte Hekeya. Envie d'un design créé rien que pour vous ? Ajoutez {price} DT.",
+
+    },
+    product: {
+        kindBag: "Sacs",
+        kindKeychain: "Porte-clés",
+        backBag: "Tous les sacs",
+        backKeychain: "Tous les porte-clés",
+        colour: "Couleur",
+        material: "Matière",
+        leadTime: "Délai de réalisation",
+        order: "Commander",
+        orderSubject: "Commande : {name}",
+        orderBody: "Bonjour Hekeya,\n\nJe souhaite commander {name}{variant}.\n\nMerci !",
+        care: "Réparations gratuites avec Hekeya Care ♡",
+        prev: "Précédent",
+        next: "Suivant",
+        notFound: "Nous n’avons pas trouvé cette pièce.",
+        photos: "Photos",
+        photoLabel: "Photo {n}",
+        photoAlt: "{name}, photo {n} sur {total}",
+        prevPhoto: "Photo précédente",
+        nextPhoto: "Photo suivante",
+    },
+    order: {
+        eyebrow: "Comment commander",
+        title: "Discutons d'abord",
+        close: "Fermer",
+        why: "Chaque pièce Hekeya est faite à la main pour vous, donc pas de panier. Nous confirmons chaque commande dans une courte discussion privée.",
+        point1: "Nous confirmons ensemble la couleur, la taille et les détails avant de commencer.",
+        point2: "Nous pouvons vérifier que la commande vient d'une vraie personne et éviter les fausses commandes.",
+        point3: "Vous obtenez une réponse personnelle sur le prix, la livraison et les délais.",
+        stepsTitle: "3 étapes seulement",
+        step1: "Copiez le message ci-dessous.",
+        step2: "Appuyez sur le bouton Instagram pour ouvrir notre discussion.",
+        step3: "Collez le message et envoyez-le. Nous répondons dès que possible.",
+        messageLabel: "Votre message",
+        copy: "Copier le message",
+        copied: "Copié ✓",
+        ig: "Copier et ouvrir Instagram",
+        igHint: "Le message est copié pour vous. Il suffit de le coller dans la discussion.",
+        desktopNote: "Sur ordinateur, Instagram ouvre notre profil : cliquez sur Message.",
+        fb: "Ouvrir Messenger",
+        email: "ou envoyez-le plutôt par e-mail",
+        msg: {
+            hello: "Bonjour Hekeya 👋",
+            intro: "Je souhaite commander :",
+            product: "Produit : {name}",
+            colour: "Couleur : {colour}",
+            price: "Prix : {price}",
+            size: "Taille : {size}",
+            link: "Lien : {url}",
+            thanks: "Merci !",
+        },
     },
 };

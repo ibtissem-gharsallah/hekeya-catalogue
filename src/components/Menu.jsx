@@ -1,9 +1,13 @@
 "use client"
 import React, {useRef, useState} from 'react';
+import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import useProducts from "../hooks/useProducts.js";
 import {useGSAP} from "@gsap/react";
 import  gsap from "gsap";
 import { useT } from "../../i18n/LanguageContext.jsx";
+import OrderSheet from "./OrderSheet.jsx";
+import buildOrder from "./orderMessage.js";
 const MenuContent = ({ sliderLists, discount }) => {
     const { t, tr, colorName } = useT();
     const contentRef =useRef();
@@ -11,6 +15,7 @@ const MenuContent = ({ sliderLists, discount }) => {
     const touch = useRef(null);       // finger position when a swipe starts
     const [currentIndex, setCurrentIndex] = useState(0);
     const [colorIndex, setColorIndex] = useState(0);
+    const [orderOpen, setOrderOpen] = useState(false);
     useGSAP(()=>{
 
         gsap.fromTo('#title',{
@@ -29,7 +34,7 @@ const MenuContent = ({ sliderLists, discount }) => {
             duration:1,
             ease:"power1.inOut"
         });
-        gsap.fromTo('.details p, .bag-price, .bag-meta',{yPercent:100,opacity:0},{
+        gsap.fromTo('.details p, .bag-price',{yPercent:100,opacity:0},{
             yPercent:0,opacity:1,ease:"power1.inOut"
         });
         gsap
@@ -132,6 +137,17 @@ const MenuContent = ({ sliderLists, discount }) => {
     const regularPrice = oldPrice ?? newPrice;
     const money = (n) => `${n} DT`;
 
+    // "Order now": same ready-to-send message as the product page, with the colour selected here
+    const { message, emailHref } = buildOrder({
+        t,
+        name: currentCocktail.name,
+        slug: currentCocktail.slug ?? currentCocktail.id,
+        colour: colors[colorIndex]?.name,
+        colourLabel: colors[colorIndex] ? colorName(colors[colorIndex].name) : "",
+        price: onSale ? newPrice : regularPrice,
+        dimensions,
+    });
+
     // the same swatches are rendered twice: under the description on phones, under the bag photo on desktop
     const renderSwatches = (extraClass) =>
         colors.length > 1 && (
@@ -212,24 +228,33 @@ const MenuContent = ({ sliderLists, discount }) => {
                             )}
                         </div>
                         <div className="details">
-                            <p>
+                            {/* 3 lines max, then "..." (the full text is on the product page) */}
+                            <p className="line-clamp-3">
                                 {tr(currentCocktail, "description")}
                             </p>
-                            {(dimensions?.height || dimensions?.width) && (
-                                <div className="bag-meta">
-                                    {dimensions.height && <span>{t("menu.height")} {dimensions.height}</span>}
-                                    {dimensions.height && dimensions.width && <span aria-hidden="true"> · </span>}
-                                    {dimensions.width && <span>{t("menu.width")} {dimensions.width}</span>}
-                                </div>
-                            )}
                             {/* phones: swatches under the description */}
                             {renderSwatches("lg:hidden")}
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setOrderOpen(true)}
+                                    className="cursor-pointer rounded-full bg-[#9B0209] px-6 py-2.5 text-xs uppercase tracking-[0.2em] text-[#f7f2ea] transition-colors duration-300 hover:bg-[#6f0107] lg:px-[1.8vw] lg:py-[0.75vw] lg:text-[clamp(11px,0.85vw,15px)]"
+                                >
+                                    {t("product.order")}
+                                </button>
+                                <Link to={`/bag/${currentCocktail.slug ?? currentCocktail.id}`} className="discover">{t("menu.discover")}</Link>
+                            </div>
 
                         </div>
                     </div>
                 </div>
             </div>
 
+            {/* rendered in <body>, so the moving columns of this section can never shift it */}
+            {orderOpen && createPortal(
+                <OrderSheet message={message} emailHref={emailHref} onClose={() => setOrderOpen(false)} />,
+                document.body
+            )}
         </section>
     );
 };

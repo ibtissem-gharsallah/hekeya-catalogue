@@ -1,26 +1,16 @@
 // link titles live in i18n/en.js and i18n/fr.js  ->  nav.<id>
+//   id   = the id of the section in the page (never shown to visitors, keep it as is)
+//   slug = what visitors see in the address bar  ->  hekeya.com/#bags
 const navLinks = [
-    {
-        id: "hero",
-    },
-    {
-        id: "offer",
-    },
-    {
-        id: "cocktails",
-    },
-    {
-        id: "menu",
-    },
-    {
-        id: "contact",
-    },
-    {
-        id: "catalogue-cta",
-    },
+    { id: "menu", slug: "bags" },
+    { id: "cocktails", slug: "timeline" },
+    { id: "keychains", slug: "keychains" },
+    { id: "catalogue-cta", slug: "catalogue" },
+    { id: "contact", slug: "contact" },
 ];
 
-
+// "bags" -> "menu" (a slug that is not listed above is used as the id itself, e.g. "keychains", "care")
+const anchorId = (slug) => navLinks.find((l) => l.slug === slug)?.id ?? slug;
 
 const socials = [
     {
@@ -43,5 +33,6 @@ const socials = [
 
 export {
     navLinks,
+    anchorId,
     socials,
 };

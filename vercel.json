@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/((?!images|images-webp|fonts|assets|.*\\..*).*)", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/(images|images-webp|fonts)/(.*)",
