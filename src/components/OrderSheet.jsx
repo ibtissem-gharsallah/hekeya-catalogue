@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useT } from "../../i18n/LanguageContext.jsx";
-import { INSTAGRAM_USERNAME, FACEBOOK_PAGE } from "../../constants/contact.js";
+import { FACEBOOK_PAGE } from "../../constants/contact.js";
 
 /*
   "Order now" sheet: explains why orders go through a chat, shows the ready-to-send message,
@@ -41,7 +41,6 @@ const OrderSheet = ({ message, emailHref, onClose }) => {
     const [copied, setCopied] = useState(false);
     const timer = useRef(null);
 
-    const canHover = typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches;
     const desktop = typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches;
 
     // opening animation
@@ -102,10 +101,7 @@ const OrderSheet = ({ message, emailHref, onClose }) => {
 
     const points = [t("order.point1"), t("order.point2"), t("order.point3")];
     const steps = [t("order.step1"), t("order.step2"), t("order.step3")];
-    const igHref = INSTAGRAM_USERNAME ? `https://ig.me/m/${INSTAGRAM_USERNAME}` : null;
     const fbHref = FACEBOOK_PAGE ? `https://m.me/${FACEBOOK_PAGE}?text=${encodeURIComponent(message)}` : null;
-
-    const channel = "group flex items-center justify-center gap-3 rounded-full px-6 py-3.5 text-sm font-medium tracking-wide transition-colors duration-300";
 
     return (
         <div ref={root} className="fixed inset-0 z-[60] flex items-end justify-center md:items-center md:p-6" onKeyDown={onKeyDown}>
@@ -172,31 +168,22 @@ const OrderSheet = ({ message, emailHref, onClose }) => {
                     <span className="sr-only" aria-live="polite">{copied ? t("order.copied") : ""}</span>
                 </div>
 
-                {/* where to send it */}
+                {/* where to send it: Messenger opens with the text already filled; Instagram cannot, so it is plain text */}
                 <div className="os-item mt-6 flex flex-col gap-3">
-                    {igHref && (
+                    {fbHref && (
                         <a
-                            href={igHref}
+                            href={fbHref}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={doCopy}   /* Instagram cannot pre-fill the text, so it is copied for the visitor */
-                            className={`${channel} bg-[#9B0209] text-[#f7f2ea] hover:bg-[#6f0107]`}
+                            className="group flex items-center justify-center gap-3 rounded-full bg-[#9B0209] px-6 py-3.5 text-sm font-medium tracking-wide text-[#f7f2ea] transition-colors duration-300 hover:bg-[#6f0107]"
                         >
-                            <img src="/images-webp/ig.webp" alt="" aria-hidden="true" width="26" height="26" className="size-6 rounded-md bg-[#f7f2ea] p-0.5" />
-                            {t("order.ig")}
-                        </a>
-                    )}
-                    {igHref && <p className="-mt-1 text-center text-[13px] text-black/60">{t("order.igHint")}{canHover && ` ${t("order.desktopNote")}`}</p>}
-
-                    {fbHref && (
-                        <a href={fbHref} target="_blank" rel="noopener noreferrer" className={`${channel} border border-[#9B0209] text-[#9B0209] hover:bg-[#9B0209] hover:text-[#f7f2ea]`}>
                             <img src="/images-webp/fc.webp" alt="" aria-hidden="true" width="26" height="26" className="size-6 rounded-md" />
                             {t("order.fb")}
                         </a>
                     )}
-
-                    <a href={emailHref} className="text-center font-serif text-base italic text-[#9B0209] underline-offset-4 hover:underline">{t("order.email")}</a>
+                    <p className="text-center text-[14px] leading-snug text-black/70">{t("order.igText")}</p>
                 </div>
+                <a href={emailHref} className="os-item mt-5 block text-center font-serif text-base italic text-[#9B0209] underline-offset-4 hover:underline">{t("order.email")}</a>
             </div>
         </div>
     );
