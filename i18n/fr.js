@@ -170,8 +170,8 @@ export default {
         point3: "Vous obtenez une réponse personnelle sur le prix, la livraison et les délais.",
         stepsTitle: "3 étapes seulement",
         step1: "Copiez le message ci-dessous.",
-        step2: "Appuyez sur le bouton Instagram pour ouvrir notre discussion.",
-        step3: "Collez le message et envoyez-le. Nous répondons dès que possible.",
+        step2: "Ouvrez Instagram ou Messenger et écrivez-nous.",
+        step3: "Collez-le et envoyez. Nous confirmerons votre commande là-bas.",
         messageLabel: "Votre message",
         copy: "Copier le message",
         copied: "Copié ✓",
@@ -190,5 +190,7 @@ export default {
             link: "Lien : {url}",
             thanks: "Merci !",
         },
+        sendText: "Il ne reste qu'à nous envoyer ce message sur Instagram ou Messenger.",
+        sendWhere: "@hekeya.store sur Instagram · Hekeya sur Messenger",
     },
 };

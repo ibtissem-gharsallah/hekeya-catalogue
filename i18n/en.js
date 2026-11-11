@@ -151,8 +151,8 @@ export default {
         point3: "You get a personal answer on price, delivery and timing.",
         stepsTitle: "It takes 3 steps",
         step1: "Copy the message below.",
-        step2: "Tap the Instagram button to open our chat.",
-        step3: "Paste the message and send it. We reply as soon as we can.",
+        step2: "Open Instagram or Messenger and start a chat with us.",
+        step3: "Paste it and send. We'll confirm your order there.",
         messageLabel: "Your message",
         copy: "Copy message",
         copied: "Copied ✓",
@@ -171,5 +171,7 @@ export default {
             link: "Link: {url}",
             thanks: "Thank you!",
         },
+        sendText: "Now just send us this message on Instagram or Messenger.",
+        sendWhere: "@hekeya.store on Instagram · Hekeya on Messenger",
     },
 };
