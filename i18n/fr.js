@@ -135,8 +135,8 @@ export default {
         slideLabel: "Porte-clés {current} sur {total}",
         imgAlt: "Porte-clés {name}",
         view: "View details",
-        custom: "Carte personnalisée",
-        customNote: "Votre propre design sur la carte, seulement {price} DT",
+        custom: "En option : votre carte personnalisée",
+        customNote: "Chaque porte-clés est livré avec sa carte Hekeya. Envie d'un design créé rien que pour vous ? Ajoutez {price} DT.",
 
     },
     product: {

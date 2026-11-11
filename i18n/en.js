@@ -115,8 +115,8 @@ export default {
         slideLabel: "Keychain {current} of {total}",
         imgAlt: "{name} keychain",
         view: "Voir le produit",
-        custom: "Custom design card",
-        customNote: "Your own design on the card, only {price} DT",
+        custom: "Optional: your own custom card",
+        customNote: "Every keychain comes with its Hekeya card. Want a design made just for you? Add {price} DT.",
 
 
     },

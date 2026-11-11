@@ -6,6 +6,7 @@ import { useT } from "../../i18n/LanguageContext.jsx";
 import useProducts from "../hooks/useProducts.js";
 import useKeychains from "../hooks/useKeychains.js";
 import OrderSheet from "./OrderSheet.jsx";
+import CustomCardBadge from "./CustomCardBadge.jsx";
 import { CONTACT_EMAIL } from "../../constants/contact.js";
 
 /*
@@ -128,6 +129,11 @@ const ProductView = ({ item, items, kind, discount }) => {
 
             // the photo floats very slowly
             gsap.to(".pv-bob", { y: -10, duration: 4, ease: "sine.inOut", yoyo: true, repeat: -1 });
+
+            // keychains: the "custom card" badge wobbles a tiny bit, like a tag in the wind
+            if (root.current.querySelector(".kc-badge-in")) {
+                gsap.fromTo(".kc-badge-in", { rotation: -1.4 }, { rotation: 1.4, duration: 3.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
+            }
 
             // yarn balls drift while you scroll
             gsap.to(".pv-yarn-a", { y: 120, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
@@ -325,6 +331,13 @@ const ProductView = ({ item, items, kind, discount }) => {
                         </dl>
                     )}
 
+                    {/* keychains only: custom design card for +5 DT */}
+                    {kind === "keychain" && (
+                        <div className="pv-fade mt-7 lg:mt-[2vw]">
+                            <CustomCardBadge />
+                        </div>
+                    )}
+
                     {hasColours && (
                         <div className="pv-fade mt-7 lg:mt-[2vw]">
                             <p className="text-[11px] uppercase tracking-[0.2em] text-black/60 lg:text-[clamp(10px,0.8vw,13px)]">
@@ -357,7 +370,8 @@ const ProductView = ({ item, items, kind, discount }) => {
                         <ArrowIcon className="w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
                     </button>
 
-                    <Link to="/#care" className="pv-fade font-serif mt-5 text-base italic text-[#9B0209] underline-offset-4 hover:underline lg:mt-[1.2vw] lg:text-[clamp(14px,1.1vw,19px)]">
+                    {/* scrolls down to the Hekeya Care section at the bottom of this same page */}
+                    <Link to="#care" className="pv-fade font-serif mt-5 text-base italic text-[#9B0209] underline-offset-4 hover:underline lg:mt-[1.2vw] lg:text-[clamp(14px,1.1vw,19px)]">
                         {t("product.care")}
                     </Link>
                 </div>

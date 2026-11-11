@@ -50,13 +50,13 @@ const Home = () => (
     <>
         <Hero/>
         <WaveSeparator/>
-        <Spotlight/>
+        <Keychains/>
         <WaveSeparator/>
-        <Cocktails/>
+        <Spotlight/>
         <WaveSeparator/>
         <Menu/>
         <WaveSeparator/>
-        <Keychains/>
+        <Cocktails/>
         <WaveSeparator/>
         <Care/>
         <WaveSeparator/>
@@ -67,9 +67,12 @@ const Home = () => (
 );
 
 // product pages: same nav at the top, same footer at the bottom
+// product pages: same nav at the top, then the Care section, then the same footer
 const ProductLayout = ({ children }) => (
     <>
         {children}
+        <WaveSeparator/>
+        <Care/>
         <WaveSeparator/>
         <Contact/>
     </>
