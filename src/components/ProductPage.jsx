@@ -19,8 +19,8 @@ import { CONTACT_EMAIL } from "../../constants/contact.js";
 const money = (n) => `${n} DT`;
 
 const KINDS = {
-    bag: { path: "bag", back: "/#bags", kind: "product.kindBag", backLabel: "product.backBag" },
-    keychain: { path: "keychain", back: "/#keychains", kind: "product.kindKeychain", backLabel: "product.backKeychain" },
+    bag: { path: "bag", back: "/bags", kind: "product.kindBag", backLabel: "product.backBag" },
+    keychain: { path: "keychain", back: "/keychains", kind: "product.kindKeychain", backLabel: "product.backKeychain" },
 };
 
 const ArrowIcon = ({ dir = "right", className = "" }) => (

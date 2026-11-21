@@ -1,5 +1,5 @@
 "use client"
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import useProducts from "../hooks/useProducts.js";
@@ -8,9 +8,40 @@ import  gsap from "gsap";
 import { useT } from "../../i18n/LanguageContext.jsx";
 import OrderSheet from "./OrderSheet.jsx";
 import buildOrder from "./orderMessage.js";
+// small photo of a bag: the bag's own photo, or the first colour's photo (many bags only have colour photos); a soft icon if there is none
+const Thumb = ({ bag }) => {
+    const [failed, setFailed] = useState(false);
+    const src = bag.thumb || bag.colors?.[0]?.image || bag.image;
+    if (!src || failed) {
+        return (
+            <span className="flex h-full w-full items-center justify-center" aria-hidden="true">
+                <svg viewBox="0 0 64 64" className="w-1/2 text-[#9B0209]/35" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 26c0-8 5-14 12-14s12 6 12 14" />
+                    <path d="M12 28h40l-3 24a4 4 0 0 1-4 3H19a4 4 0 0 1-4-3z" />
+                </svg>
+            </span>
+        );
+    }
+    return (
+        <img
+            src={src}
+            alt=""
+            aria-hidden="true"
+            width="120"
+            height="150"
+            loading="lazy"
+            decoding="async"
+            draggable="false"
+            onError={() => setFailed(true)}
+            className="h-full w-full select-none object-contain p-[6%]"
+        />
+    );
+};
+
 const MenuContent = ({ sliderLists, discount }) => {
     const { t, tr, colorName } = useT();
     const contentRef =useRef();
+    const railRef = useRef(null);     // the row of thumbnails
     const enterFrom = useRef(-100);   // side the new photo slides in from (-100 = left, 100 = right)
     const touch = useRef(null);       // finger position when a swipe starts
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -56,6 +87,38 @@ const MenuContent = ({ sliderLists, discount }) => {
                 scrollTrigger: { trigger: "#menu", start: "top top", end: "bottom top", scrub: true },
             }).to(".recipe", { y: 100 }, 0);
         });
+    },[currentIndex])
+
+    // thumbnails rise in one by one (only the wrapper moves; the hover/active effects are CSS on the inner photo)
+    useGSAP(()=>{
+        gsap.fromTo('.rail-item',
+            { opacity:0, y:22 },
+            { opacity:1, y:0, duration:0.7, ease:"power3.out", stagger:0.08, delay:0.3, clearProps:"transform,opacity" }
+        );
+        // the "next" arrow nudges a few times, to show there is more to see
+        gsap.to('.arrows button:last-child img', { x:8, duration:0.7, ease:"sine.inOut", yoyo:true, repeat:5, delay:2.5 });
+    },[])
+
+    // the two buttons invite a click: a soft ring pulses around "Order now", the arrow of "View details" nudges
+    useGSAP(()=>{
+        const mm = gsap.matchMedia();
+        mm.add("(prefers-reduced-motion: no-preference)", () => {
+            gsap.fromTo('.cta-pulse',
+                { scale:1, opacity:0.55 },
+                { scale:1.28, opacity:0, duration:1.4, ease:"power2.out", repeat:-1, repeatDelay:2.4, delay:3 }
+            );
+            gsap.to('.cta-arrow',
+                { x:6, duration:0.5, ease:"power1.inOut", yoyo:true, repeat:-1, repeatDelay:2.2, delay:3.8 }
+            );
+        });
+    },[])
+
+    // keep the selected thumbnail in view inside the row (the page itself never scrolls)
+    useEffect(()=>{
+        const rail = railRef.current;
+        const el = rail?.querySelector('[aria-current="true"]');
+        if (!rail || !el) return;
+        rail.scrollTo({ left: el.offsetLeft - rail.clientWidth / 2 + el.offsetWidth / 2, behavior: "smooth" });
     },[currentIndex])
 
     // ADDED: same leaf parallax as the Cocktails section (leaves slide in from the sides as you scroll)
@@ -148,7 +211,7 @@ const MenuContent = ({ sliderLists, discount }) => {
         dimensions,
     });
 
-    // the same swatches are rendered twice: under the description on phones, under the bag photo on desktop
+    // colour swatches, shown under the description
     const renderSwatches = (extraClass) =>
         colors.length > 1 && (
             <div className={`swatches ${extraClass}`} role="group" aria-label={t("menu.colours")}>
@@ -175,15 +238,46 @@ const MenuContent = ({ sliderLists, discount }) => {
                 <p>{t("menu.eyebrow")}</p>
                 <h2 id="menu-heading">{t("menu.title")}</h2>
             </header>
-            <nav className="cocktail-tabs text-black" aria-label={t("menu.navLabel")}>
-                {sliderLists.map((cocktail, index) => {
-                    const isActive= index === currentIndex;
-                    return (
-                        <button key={cocktail.id} className={`${isActive ?'text-[#9B0209] border-[#9B0209]':'text-black/45 border-transparent'}`} onClick={()=>goToSlide(index)
-                        }> {cocktail.name} </button>
-                    )
-                })}
-            </nav>
+            {/* thumbnails: one small photo per bag, the selected one is lifted and ringed */}
+            <div className="relative z-10 mb-3 lg:absolute lg:inset-x-0 lg:top-[9.4vw] lg:mb-0">
+                <p className="mb-2 text-center font-serif text-sm italic text-[#9B0209]/80 lg:hidden">{t("menu.railHint")}</p>
+                <nav
+                    ref={railRef}
+                    className="relative mx-auto flex w-max max-w-full snap-x gap-3 overflow-x-auto px-2 pb-3 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:max-w-[84vw] lg:gap-[1.5vw] lg:px-[1vw] lg:pb-[0.4vw] lg:pt-[0.5vw]"
+                    aria-label={t("menu.navLabel")}
+                >
+                    {sliderLists.map((bag, index) => {
+                        const isActive = index === currentIndex;
+                        return (
+                            <button
+                                key={bag.id}
+                                type="button"
+                                onClick={() => goToSlide(index, index > currentIndex ? 100 : -100)}
+                                aria-label={bag.name}
+                                aria-current={isActive ? "true" : undefined}
+                                className="rail-item group flex shrink-0 cursor-pointer snap-center flex-col items-center gap-1.5 outline-none lg:gap-[0.4vw]"
+                            >
+                                <span
+                                    className={`relative block h-[78px] w-[64px] overflow-hidden rounded-[1.1rem] bg-[#fffaf6] transition-[transform,box-shadow,opacity] duration-300 group-focus-visible:ring-2 group-focus-visible:ring-[#9B0209] lg:h-[5vw] lg:w-[4.2vw] lg:rounded-[0.9vw] ${
+                                        isActive
+                                            ? "-translate-y-1 opacity-100 shadow-[0_10px_18px_-8px_rgba(106,3,9,0.55)] ring-2 ring-[#9B0209]"
+                                            : "opacity-70 ring-1 ring-[#9B0209]/15 group-hover:-translate-y-0.5 group-hover:opacity-100"
+                                    }`}
+                                >
+                                    <Thumb bag={bag} />
+                                </span>
+                                <span className={`font-modern-negra max-w-[72px] truncate text-[13px] leading-none transition-colors duration-300 lg:max-w-[6vw] lg:text-[clamp(11px,1.05vw,17px)] ${isActive ? "text-[#9B0209]" : "text-black/50 group-hover:text-[#9B0209]"}`}>
+                                    {bag.name}
+                                </span>
+                            </button>
+                        );
+                    })}
+                </nav>
+            </div>
+            {/* desktop: which bag you are on, out of how many */}
+            <p className="font-numerals absolute right-[4vw] top-[11.6vw] z-20 hidden text-[clamp(14px,1.3vw,22px)] text-[#9B0209] lg:block" aria-hidden="true">
+                {String(currentIndex + 1).padStart(2, "0")}<span className="mx-1 opacity-40">/</span><span className="opacity-60">{String(totalCocktails).padStart(2, "0")}</span>
+            </p>
             <div className="content" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
                 <div className="arrows">
                     <button className="text-left" onClick={() => goToSlide(currentIndex - 1)}>
@@ -204,8 +298,6 @@ const MenuContent = ({ sliderLists, discount }) => {
                     </div>
                     {/* key = new <img> per photo, so the previous bag never lingers while the next one downloads */}
                     <img key={currentImage} className="object-contain" src={currentImage} alt={currentCocktail.name} decoding="async"/>
-                    {/* desktop: swatches under the bag photo */}
-                    {renderSwatches("hidden lg:flex")}
                 </div>
                 <div className="recipe">
                     <div className="recipe-inner">
@@ -232,17 +324,27 @@ const MenuContent = ({ sliderLists, discount }) => {
                             <p className="line-clamp-3">
                                 {tr(currentCocktail, "description")}
                             </p>
-                            {/* phones: swatches under the description */}
-                            {renderSwatches("lg:hidden")}
-                            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                            {/* swatches under the description (phones and computers) */}
+                            {renderSwatches("")}
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-3 lg:flex-col lg:items-start lg:gap-[0.8vw]">
                                 <button
                                     type="button"
                                     onClick={() => setOrderOpen(true)}
-                                    className="cursor-pointer rounded-full bg-[#9B0209] px-6 py-2.5 text-xs uppercase tracking-[0.2em] text-[#f7f2ea] transition-colors duration-300 hover:bg-[#6f0107] lg:px-[1.8vw] lg:py-[0.75vw] lg:text-[clamp(11px,0.85vw,15px)]"
+                                    className="group relative cursor-pointer rounded-full bg-[#9B0209] px-6 lg:w-[14vw] lg:min-w-44 py-2.5 text-xs uppercase tracking-[0.2em] text-[#f7f2ea] transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[#6f0107] active:translate-y-0 lg:px-[1.8vw] lg:py-[0.75vw] lg:text-[clamp(11px,0.85vw,15px)]"
                                 >
+                                    {/* soft ring that pulses now and then */}
+                                    <span aria-hidden="true" className="cta-pulse pointer-events-none absolute inset-0 rounded-full border-2 border-[#9B0209]" />
                                     {t("product.order")}
                                 </button>
-                                <Link to={`/bag/${currentCocktail.slug ?? currentCocktail.id}`} className="discover">{t("menu.discover")}</Link>
+                                <Link
+                                    to={`/bag/${currentCocktail.slug ?? currentCocktail.id}`}
+                                    className="group inline-flex items-center justify-center gap-2 rounded-full border border-[#9B0209] px-6 lg:w-[14vw] lg:min-w-44 py-2.5 text-xs uppercase tracking-[0.2em] text-[#9B0209] transition-[transform,background-color,color] duration-300 hover:-translate-y-0.5 hover:bg-[#9B0209] hover:text-[#f7f2ea] active:translate-y-0 lg:gap-[0.6vw] lg:px-[1.8vw] lg:py-[0.75vw] lg:text-[clamp(11px,0.85vw,15px)]"
+                                >
+                                    {t("menu.discover")}
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="cta-arrow w-4 lg:w-[1.1vw] lg:min-w-4">
+                                        <path d="M4 12h16M14 6l6 6-6 6" />
+                                    </svg>
+                                </Link>
                             </div>
 
                         </div>

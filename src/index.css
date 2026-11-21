@@ -238,7 +238,7 @@ body {
     }
 
     /* ===== Weekly spotlight: the newest bag (data from Supabase) ===== */
-    #spotlight {
+    #spotlight, .kb-section {
         @apply relative w-full overflow-hidden px-5 pt-20 pb-32 lg:px-[11vw] lg:pt-[3.5vw] lg:pb-[10vw];
 
         /* yarn ball cropped by the top-right corner */
