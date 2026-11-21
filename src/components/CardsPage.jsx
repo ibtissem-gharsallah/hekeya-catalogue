@@ -304,7 +304,7 @@ const CardsView = ({ product, variants }) => {
     const chosen = ["choose1", "choose2", "choose3", "choose4"];
 
     return (
-        <section id="cards-page" ref={root} className="relative w-full overflow-hidden px-5 pb-20 pt-24 lg:px-[7vw] lg:pb-[6vw] lg:pt-[6.5vw]">
+        <section id="cards-page" ref={root} className="relative w-full overflow-hidden px-5 pb-20 pt-14 md:pt-24 lg:px-[7vw] lg:pb-[6vw] lg:pt-[6.5vw]">
             <img src="/images/yarn-left.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" className="cp-yarn-a pointer-events-none absolute left-0 top-[40%] z-0 w-[8vw] lg:top-[20vw] lg:h-[16vw] lg:w-auto" />
             <img src="/images/yarn-right.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" className="cp-yarn-b pointer-events-none absolute right-0 top-[18vw] z-0 hidden h-[15vw] w-auto lg:block" />
 

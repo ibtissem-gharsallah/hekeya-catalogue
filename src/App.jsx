@@ -87,7 +87,7 @@ const ProductLayout = ({ children }) => (
 // the bags (Menu) on their own page
 const BagsPage = () => (
     <>
-        <div className="pt-24 lg:pt-[7vw]"><Menu/></div>
+        <div className="pt-14 md:pt-24 lg:pt-[7vw] max-md:[&_#menu]:pt-2"><Menu/></div>
         <WaveSeparator/>
         <Care/>
         <WaveSeparator/>
@@ -98,7 +98,9 @@ const BagsPage = () => (
 // the keychains section on its own page (top padding = room for the fixed navbar)
 const KeychainsPage = () => (
     <>
-        <div className="pt-24 lg:pt-[7vw]"><Keychains/></div>
+        <div className="pt-14 md:pt-24 lg:pt-[7vw] max-md:[&_#keychains]:pt-4"><Keychains/></div>
+        <WaveSeparator/>
+        <Care/>
         <WaveSeparator/>
         <Contact/>
     </>

@@ -192,7 +192,7 @@ const ProductView = ({ item, items, kind, discount }) => {
     const onPointerLeave = () => { drag.current = null; quick.current?.x(0); quick.current?.y(0); };
 
     return (
-        <section id="product" ref={root} className="relative w-full overflow-hidden px-5 pb-20 pt-24 lg:px-[7vw] lg:pb-[6vw] lg:pt-[6.5vw]">
+        <section id="product" ref={root} className="relative w-full overflow-hidden px-5 pb-20 pt-14 md:pt-24 lg:px-[7vw] lg:pb-[6vw] lg:pt-[6.5vw]">
             {/* yarn balls (decoration) */}
             <img src="/images/yarn-left.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" className="pv-yarn-a pointer-events-none absolute left-0 top-[40%] z-0 w-[8vw] lg:top-[20vw] lg:w-auto lg:h-[16vw]" />
             <img src="/images/yarn-right.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" className="pv-yarn-b pointer-events-none absolute right-0 top-[18vw] z-0 hidden h-[15vw] w-auto lg:block" />
