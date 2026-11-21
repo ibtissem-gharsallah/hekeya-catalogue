@@ -2,12 +2,13 @@ import { CONTACT_EMAIL } from "../../constants/contact.js";
 
 /*
   Builds the ready-to-send order message (+ the e-mail fallback link).
-  Used by the Menu section; the texts come from i18n  ->  order.msg.*
+  customFee = a number when the client chose the custom design card (the price passed must already include it).
+  Used by the Menu and Keychains sections; the texts come from i18n  ->  order.msg.*
 */
 
 const money = (n) => `${n} DT`;
 
-export default function buildOrder({ t, name, slug, kindPath = "bag", colour, colourLabel, price, dimensions }) {
+export default function buildOrder({ t, name, slug, kindPath = "bag", colour, colourLabel, price, dimensions, customFee }) {
     const sizeText = [
         dimensions?.height && `${t("menu.height")} ${dimensions.height}`,
         dimensions?.width && `${t("menu.width")} ${dimensions.width}`,
@@ -22,6 +23,7 @@ export default function buildOrder({ t, name, slug, kindPath = "bag", colour, co
         "",
         `• ${t("order.msg.product", { name })}`,
         colourLabel ? `• ${t("order.msg.colour", { colour: colourLabel })}` : false,
+        customFee != null ? `• ${t("order.msg.customCard", { fee: money(customFee) })}` : false,
         price != null ? `• ${t("order.msg.price", { price: money(price) })}` : false,
         sizeText ? `• ${t("order.msg.size", { size: sizeText })}` : false,
         `• ${t("order.msg.link", { url })}`,

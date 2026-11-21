@@ -5,6 +5,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useT } from "../../i18n/LanguageContext.jsx";
 import useHomeBanner from "../hooks/useHomeBanner.js";
+import FloatingCards from "./FloatingCards.jsx";
 
 /*
   Home-page banner (used for the bags AND the keychains): text on the left, a transparent-background photo on the right.
@@ -17,6 +18,7 @@ import useHomeBanner from "../hooks/useHomeBanner.js";
     bigPhoto (true = wider and taller photo, it can even go a little past the page margin)
     splitLast (true = the title is split at its LAST space: "Le cadeau" dark + "parfait" burgundy)
     titleHeart (true = a small hand-drawn heart after the title)
+    floatingCards (true = playing cards float behind the photo, see FloatingCards.jsx)
     centerPhoto (true = for a tall photo: it is centred in its column, a bit smaller, never pushed to the page edge)
     trimPhoto (true = the empty transparent margins of the photo are cut off automatically, so no empty space is left around it)
   - no CSS file changes: everything is Tailwind classes
@@ -62,7 +64,7 @@ const findContent = (img) => {
     }
 };
 
-const HomeBanner = ({ table, to, id, inlineTitle = false, bigPhoto = false, trimPhoto = false, splitLast = false, titleHeart = false, centerPhoto = false }) => {
+const HomeBanner = ({ table, to, id, inlineTitle = false, bigPhoto = false, trimPhoto = false, splitLast = false, titleHeart = false, centerPhoto = false, floatingCards = false }) => {
     const { tr } = useT();
     const { banner, loading } = useHomeBanner(table);
     const root = useRef(null);
@@ -163,6 +165,8 @@ const HomeBanner = ({ table, to, id, inlineTitle = false, bigPhoto = false, trim
                             <path d="M20 31 C 8 22 6 12 13 9.5 C 17 8 19.5 10.5 20 13 C 20.5 10.5 24 8 28 9.5 C 35 12 32 22 20 31 Z" vectorEffect="non-scaling-stroke" />
                         </g>
                     </svg>
+                    {/* playing cards behind the photo (shown once the photo's size is known, so they never jump) */}
+                    {floatingCards && (!trimPhoto || crop) && <FloatingCards />}
                     <div className="kb-photo absolute inset-0 z-10">
                         <div className="kb-float h-full w-full">
                             {banner.image && !imgFailed && (
@@ -178,7 +182,8 @@ const HomeBanner = ({ table, to, id, inlineTitle = false, bigPhoto = false, trim
                                         if (c) { setCrop(c); requestAnimationFrame(() => ScrollTrigger.refresh()); }
                                     } : undefined}
                                     onError={() => setImgFailed(true)}
-                                    className={crop ? "absolute max-w-none select-none" : "h-full w-full select-none object-contain object-right"}
+                                    // pointer-events-none below: the photo never catches taps, its transparent margins can reach over the button
+                                    className={crop ? "pointer-events-none absolute max-w-none select-none" : "pointer-events-none h-full w-full select-none object-contain object-right"}
                                     style={crop ? { left: `${crop.left}%`, top: `${crop.top}%`, width: `${crop.width}%`, height: "auto" } : undefined}
                                 />
                             )}

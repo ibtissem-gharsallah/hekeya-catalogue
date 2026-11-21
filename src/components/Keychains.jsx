@@ -7,7 +7,7 @@ import { useT } from "../../i18n/LanguageContext.jsx";
 import useKeychains from "../hooks/useKeychains.js";
 import OrderSheet from "./OrderSheet.jsx";
 import buildOrder from "./orderMessage.js";
-import CustomCardBadge from "./CustomCardBadge.jsx";
+import CustomCardBadge, { CUSTOM_CARD_PRICE } from "./CustomCardBadge.jsx";
 
 /*
   Keychains section: a clothesline with the keychain cards hanging from it.
@@ -79,6 +79,8 @@ const KeychainsContent = ({ items }) => {
     const stage = useRef(null);
     const [active, setActive] = useState(0);
     const [orderItem, setOrderItem] = useState(null);   // the keychain whose "Order now" sheet is open
+    const [custom, setCustom] = useState(false);          // custom design card chosen (+ CUSTOM_CARD_PRICE)
+    const extra = custom ? CUSTOM_CARD_PRICE : 0;
 
     const n = items.length;
     const activeRef = useRef(0);          // latest value for the resize observer
@@ -157,8 +159,6 @@ const KeychainsContent = ({ items }) => {
             place(false);
 
             const startIdle = () => {
-                // the badge wobbles a tiny bit, like a tag in the wind
-                gsap.fromTo(".kc-badge-in", { rotation: -1.4 }, { rotation: 1.4, duration: 3.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
                 gsap.utils.toArray(".kc-card").forEach((card, i) => {
                     gsap.fromTo(
                         card,
@@ -176,7 +176,7 @@ const KeychainsContent = ({ items }) => {
                 .from(".kc-eyebrow", { opacity: 0, y: 16, duration: 0.8 })
                 .from(".kc-title", { opacity: 0, y: 24, duration: 0.9 }, "-=0.5")
                 .from(".kc-sub", { opacity: 0, y: 16, duration: 0.8 }, "-=0.6")
-                .from(".kc-badge-in", { opacity: 0, scale: 0.6, rotation: -8, duration: 0.9, ease: "back.out(2.2)" }, "-=0.4")
+                .from(".kc-badge", { opacity: 0, y: 16, duration: 0.8 }, "-=0.4")
                 .fromTo(".kc-rope", { clipPath: "inset(0 0 0 100%)" }, { clipPath: "inset(0 0 0 0%)", duration: 1.4, ease: "power2.inOut" }, "-=0.5")
                 .from(".kc-sway", { y: -70, opacity: 0, rotation: (i) => (i % 2 ? 9 : -9), duration: 1.5, ease: "elastic.out(1, 0.45)", stagger: { each: 0.18, from: "center" } }, "-=0.7")
                 .from(".kc-controls", { opacity: 0, y: 12, duration: 0.6 }, "-=0.8")
@@ -248,9 +248,9 @@ const KeychainsContent = ({ items }) => {
                     {t("keychains.sub")}
                 </p>
 
-                {/* badge: custom design card */}
+                {/* option: custom design card (+ fee), closed by default */}
                 <div className="kc-badge mt-6 flex justify-center lg:mt-[1.6vw]">
-                    <CustomCardBadge />
+                    <CustomCardBadge checked={custom} onChange={setCustom} />
                 </div>
             </header>
 
@@ -312,7 +312,7 @@ const KeychainsContent = ({ items }) => {
                                     <div className="mt-[0.9em] rounded-[1.1em] bg-[#8a0610] px-[1.1em] py-[1em] text-center text-[#f7f2ea] shadow-[0_0.8em_1.4em_-0.8em_rgba(106,3,9,0.6)]">
                                         <h3 className="font-modern-negra text-[1.9em] uppercase leading-none">{item.name}</h3>
                                         {item.price != null && (
-                                            <p className="font-numerals mt-[0.5em] text-[1.7em] leading-none">{money(item.price)}</p>
+                                            <p className="font-numerals mt-[0.5em] text-[1.7em] leading-none">{money(item.price + extra)}</p>
                                         )}
                                         {/* buttons only on the selected card */}
                                         {isActive && (
@@ -373,7 +373,8 @@ const KeychainsContent = ({ items }) => {
                         name: orderItem.name,
                         slug: orderItem.slug,
                         kindPath: "keychain",
-                        price: orderItem.price,
+                        price: orderItem.price != null ? orderItem.price + extra : orderItem.price,
+                        customFee: custom ? CUSTOM_CARD_PRICE : undefined,
                         dimensions: orderItem.dimensions,
                     })}
                     onClose={() => setOrderItem(null)}

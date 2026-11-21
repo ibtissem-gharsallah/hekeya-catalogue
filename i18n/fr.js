@@ -3,11 +3,12 @@ export default {
     nav: {
         hero: "À propos",
         offer: "Promo",
-        cocktails: "Délais",
         menu: "Sacs",
-        contact: "Contact",
-        "catalogue-cta": "Catalogue",
         keychains: "Porte-clés",
+        gifts: "Cadeaux",
+        cocktails: "Délais",
+        contact: "Nous contacter",
+        "catalogue-cta": "Catalogue",
     },
 
     hero: {
@@ -137,8 +138,8 @@ export default {
         slideLabel: "Porte-clés {current} sur {total}",
         imgAlt: "Porte-clés {name}",
         view: "View details",
-        custom: "En option : votre carte personnalisée",
-        customNote: "Chaque porte-clés est livré avec sa carte Hekeya. Envie d'un design créé rien que pour vous ? Ajoutez {price} DT.",
+        customTitle: "Carte au design personnalisé ({fee})",
+        customText: "Vous voulez votre propre design sur la carte fournie avec ? Activez l'option et le prix se met à jour. Sans elle, vous recevez notre carte standard sans supplément.",
 
     },
     product: {
@@ -191,10 +192,12 @@ export default {
             size: "Taille : {size}",
             link: "Lien : {url}",
             thanks: "Merci !",
+            customCard: "Carte au design personnalisé : oui (+{fee})",
         },
         sendText: "Il ne reste qu'à nous envoyer ce message sur Instagram ou Messenger.",
         sendWhere: "@hekeya.store sur Instagram · Hekeya sur Messenger",
         igText: "Vous préférez Instagram ? Copiez le message ci-dessus et envoyez-le à @hekeya.store.",
+
     },
     // ---- à coller dans le dictionnaire FR (à côté de hero, menu, order ...) ----
     cards: {

@@ -36,8 +36,8 @@ const NavBar = () => {
                 <ul>
                     {navLinks.map((link) => (
                         <li key={link.id}>
-                            {/* the address bar shows the nice name (/#bags); App.jsx turns it back into the section id */}
-                            <Link className="text-black" to={`/#${link.slug}`}>{t(`nav.${link.id}`)}</Link>
+                            {/* a page (/bags, /keychains, /cards) or a section of the home page (/#timeline, App.jsx turns it back into the section id) */}
+                            <Link className="text-black" to={link.to ?? `/#${link.slug}`}>{t(`nav.${link.id}`)}</Link>
 
                         </li>
                     ))}

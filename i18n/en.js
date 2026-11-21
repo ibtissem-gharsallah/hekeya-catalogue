@@ -3,11 +3,12 @@ export default {
     nav: {
         hero: "About Us",
         offer: "Discount",
-        cocktails: "TimeLine",
         menu: "Bags",
-        contact: "Contact",
-        "catalogue-cta": "Catalogue",
         keychains: "Keychains",
+        gifts: "Gifts",
+        cocktails: "TimeLine",
+        contact: "Contact us",
+        "catalogue-cta": "Catalogue",
     },
 
     hero: {
@@ -116,8 +117,8 @@ export default {
         slideLabel: "Keychain {current} of {total}",
         imgAlt: "{name} keychain",
         view: "Voir le produit",
-        custom: "Optional: your own custom card",
-        customNote: "Every keychain comes with its Hekeya card. Want a design made just for you? Add {price} DT.",
+        customTitle: "Custom design card ({fee})",
+        customText: "Want your own design on the card that comes with it? Switch it on and the price updates. Without it, you get our standard card at no extra cost.",
 
 
     },
@@ -171,10 +172,12 @@ export default {
             size: "Size: {size}",
             link: "Link: {url}",
             thanks: "Thank you!",
+            customCard: "Custom design card: yes (+{fee})",
         },
         sendText: "Now just send us this message on Instagram or Messenger.",
         sendWhere: "@hekeya.store on Instagram · Hekeya on Messenger",
         igText: "Prefer Instagram? Copy the message above and send it to @hekeya.store.",
+
     },
     // ---- paste inside the EN dictionary (next to hero, menu, order ...) ----
     cards: {
