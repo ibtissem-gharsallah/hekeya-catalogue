@@ -57,20 +57,18 @@ const Home = () => (
     <>
         <Hero/>
         <WaveSeparator/>
-        <Spotlight/>
-        <WaveSeparator/>
-        <Cocktails/>
-        <WaveSeparator/>
-        <BagBanner/>
+        <CardsBanner/>
         <WaveSeparator/>
         <KeychainBanner/>
         <WaveSeparator/>
-        <CardsBanner/>
+        <Spotlight/>
+        <BagBanner/>
+        <WaveSeparator/>
+        <Cocktails/>
         <WaveSeparator/>
         <Care/>
         <WaveSeparator/>
         <CatalogueCta/>
-        <WaveSeparator/>
         <Contact/>
     </>
 );
@@ -101,8 +99,6 @@ const BagsPage = () => (
 const KeychainsPage = () => (
     <>
         <div className="pt-24 lg:pt-[7vw]"><Keychains/></div>
-        <WaveSeparator/>
-        <Care/>
         <WaveSeparator/>
         <Contact/>
     </>
