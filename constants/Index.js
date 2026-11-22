@@ -1,16 +1,19 @@
-// link titles live in i18n/en.js and i18n/fr.js  ->  nav.<id>
-//   id   = the id of the section in the page (never shown to visitors, keep it as is)
-//   slug = what visitors see in the address bar  ->  hekeya.com/#bags
+// Navbar links. Titles live in i18n/en.js and i18n/fr.js  ->  nav.<id>
+//   to   = the link opens that page      (Bags, Keychains, Gifts)
+//   slug = the link scrolls to a section of the home page, the address bar shows hekeya.com/#timeline
+//   id   = the id of the section in the home page (never shown to visitors) / the key of the title in nav.<id>
 const navLinks = [
-    { id: "menu", slug: "bags" },
+    { id: "menu", to: "/bags" },
+    { id: "keychains", to: "/keychains" },
+    { id: "gifts", to: "/cards" },
     { id: "cocktails", slug: "timeline" },
-    { id: "keychains", slug: "keychains" },
-    { id: "catalogue-cta", slug: "catalogue" },
     { id: "contact", slug: "contact" },
 ];
 
-// "bags" -> "menu" (a slug that is not listed above is used as the id itself, e.g. "keychains", "care")
-const anchorId = (slug) => navLinks.find((l) => l.slug === slug)?.id ?? slug;
+// "timeline" -> "cocktails" (a slug that is not listed above is used as the id itself, e.g. "care").
+// Old links like /#bags keep working: they scroll to the bags banner of the home page.
+const oldLinks = { bags: "menu", catalogue: "catalogue-cta" };
+const anchorId = (slug) => navLinks.find((l) => l.slug === slug)?.id ?? oldLinks[slug] ?? slug;
 
 const socials = [
     {

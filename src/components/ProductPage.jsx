@@ -6,7 +6,7 @@ import { useT } from "../../i18n/LanguageContext.jsx";
 import useProducts from "../hooks/useProducts.js";
 import useKeychains from "../hooks/useKeychains.js";
 import OrderSheet from "./OrderSheet.jsx";
-import CustomCardBadge from "./CustomCardBadge.jsx";
+import CustomCardBadge, { CUSTOM_CARD_PRICE } from "./CustomCardBadge.jsx";
 import { CONTACT_EMAIL } from "../../constants/contact.js";
 
 /*
@@ -19,8 +19,8 @@ import { CONTACT_EMAIL } from "../../constants/contact.js";
 const money = (n) => `${n} DT`;
 
 const KINDS = {
-    bag: { path: "bag", back: "/#bags", kind: "product.kindBag", backLabel: "product.backBag" },
-    keychain: { path: "keychain", back: "/#keychains", kind: "product.kindKeychain", backLabel: "product.backKeychain" },
+    bag: { path: "bag", back: "/bags", kind: "product.kindBag", backLabel: "product.backBag" },
+    keychain: { path: "keychain", back: "/keychains", kind: "product.kindKeychain", backLabel: "product.backKeychain" },
 };
 
 const ArrowIcon = ({ dir = "right", className = "" }) => (
@@ -40,6 +40,8 @@ const ProductView = ({ item, items, kind, discount }) => {
     const drag = useRef(null);
     const [params] = useSearchParams();
     const [orderOpen, setOrderOpen] = useState(false);
+    const [custom, setCustom] = useState(false);      // keychains: custom design card chosen (+ CUSTOM_CARD_PRICE)
+    const extra = kind === "keychain" && custom ? CUSTOM_CARD_PRICE : 0;
     // a link like /bag/rosa?color=pink opens on that colour
     const [photoIndex, setPhotoIndex] = useState(() => {
         const wanted = params.get("color")?.toLowerCase();
@@ -83,7 +85,8 @@ const ProductView = ({ item, items, kind, discount }) => {
 
     // the order message: product, colour, price, size and a link that opens this exact colour
     const sizeText = [dimensions?.height && `${t("menu.height")} ${dimensions.height}`, dimensions?.width && `${t("menu.width")} ${dimensions.width}`].filter(Boolean).join(" · ");
-    const priceNow = onSale ? newPrice : regularPrice;
+    const basePrice = onSale ? newPrice : regularPrice;
+    const priceNow = basePrice != null ? basePrice + extra : null;
     const productUrl = `${window.location.origin}/${cfg.path}/${item.slug ?? item.id}${colors[photoIndex] ? `?color=${encodeURIComponent(String(colors[photoIndex].name).toLowerCase())}` : ""}`;
     const message = [
         t("order.msg.hello"),
@@ -91,6 +94,7 @@ const ProductView = ({ item, items, kind, discount }) => {
         "",
         `• ${t("order.msg.product", { name: item.name })}`,
         colourLabel ? `• ${t("order.msg.colour", { colour: colourLabel })}` : false,
+        extra ? `• ${t("order.msg.customCard", { fee: money(CUSTOM_CARD_PRICE) })}` : false,
         priceNow != null ? `• ${t("order.msg.price", { price: money(priceNow) })}` : false,
         sizeText ? `• ${t("order.msg.size", { size: sizeText })}` : false,
         `• ${t("order.msg.link", { url: productUrl })}`,
@@ -118,7 +122,6 @@ const ProductView = ({ item, items, kind, discount }) => {
         () => {
             gsap
                 .timeline({ defaults: { ease: "power3.out" } })
-                .from(".pv-crumb", { opacity: 0, y: -10, duration: 0.6 })
                 .from(".pv-bgname span", { opacity: 0, y: 60, scale: 0.92, duration: 1.2 }, 0.1)
                 .from(".pv-float", { opacity: 0, x: 80, rotate: 4, scale: 0.94, duration: 1.3 }, 0.15)
                 .from(".pv-thumb", { opacity: 0, y: 20, scale: 0.85, stagger: 0.08, duration: 0.6, ease: "back.out(2)" }, 0.9)
@@ -129,11 +132,6 @@ const ProductView = ({ item, items, kind, discount }) => {
 
             // the photo floats very slowly
             gsap.to(".pv-bob", { y: -10, duration: 4, ease: "sine.inOut", yoyo: true, repeat: -1 });
-
-            // keychains: the "custom card" badge wobbles a tiny bit, like a tag in the wind
-            if (root.current.querySelector(".kc-badge-in")) {
-                gsap.fromTo(".kc-badge-in", { rotation: -1.4 }, { rotation: 1.4, duration: 3.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
-            }
 
             // yarn balls drift while you scroll
             gsap.to(".pv-yarn-a", { y: 120, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
@@ -194,17 +192,12 @@ const ProductView = ({ item, items, kind, discount }) => {
     const onPointerLeave = () => { drag.current = null; quick.current?.x(0); quick.current?.y(0); };
 
     return (
-        <section id="product" ref={root} className="relative w-full overflow-hidden px-5 pb-20 pt-32 md:pt-28 lg:px-[7vw] lg:pb-[6vw] lg:pt-[8vw]">
+        <section id="product" ref={root} className="relative w-full overflow-hidden px-5 pb-20 pt-14 md:pt-24 lg:px-[7vw] lg:pb-[6vw] lg:pt-[6.5vw]">
             {/* yarn balls (decoration) */}
             <img src="/images/yarn-left.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" className="pv-yarn-a pointer-events-none absolute left-0 top-[40%] z-0 w-[8vw] lg:top-[20vw] lg:w-auto lg:h-[16vw]" />
             <img src="/images/yarn-right.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" className="pv-yarn-b pointer-events-none absolute right-0 top-[18vw] z-0 hidden h-[15vw] w-auto lg:block" />
 
-            <Link to={cfg.back} className="pv-crumb group relative z-10 inline-flex items-center gap-3 text-[12px] uppercase tracking-[0.25em] text-[#9B0209] lg:text-[clamp(11px,0.85vw,15px)]">
-                <ArrowIcon dir="left" className="w-4 transition-transform duration-300 group-hover:-translate-x-1.5" />
-                {t(cfg.backLabel)}
-            </Link>
-
-            <div className="relative z-10 mt-6 grid gap-10 lg:mt-[2vw] lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-[5vw]">
+            <div className="relative z-10 grid gap-10 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-[5vw]">
                 {/* ---------- photo + variants ---------- */}
                 <div>
                     <div
@@ -302,13 +295,13 @@ const ProductView = ({ item, items, kind, discount }) => {
                             {onSale ? (
                                 <>
                                     <span className="text-base text-black/45 line-through lg:text-[clamp(14px,1.2vw,20px)]">{money(oldPrice)}</span>
-                                    <span className="font-numerals text-4xl leading-none lg:text-[clamp(30px,2.8vw,50px)]">{money(newPrice)}</span>
+                                    <span className="font-numerals text-4xl leading-none lg:text-[clamp(30px,2.8vw,50px)]">{money(newPrice + extra)}</span>
                                     <span className="rounded-full bg-[#9B0209] px-3 py-1 text-[11px] uppercase tracking-[0.12em] text-[#f7f2ea] lg:px-[0.9vw] lg:py-[0.3vw] lg:text-[clamp(10px,0.8vw,13px)]">
                                         {t("menu.badge", { percent: discount.percent })}
                                     </span>
                                 </>
                             ) : (
-                                <span className="font-numerals text-4xl leading-none lg:text-[clamp(30px,2.8vw,50px)]">{money(regularPrice)}</span>
+                                <span className="font-numerals text-4xl leading-none lg:text-[clamp(30px,2.8vw,50px)]">{money(regularPrice + extra)}</span>
                             )}
                         </div>
                     )}
@@ -331,10 +324,10 @@ const ProductView = ({ item, items, kind, discount }) => {
                         </dl>
                     )}
 
-                    {/* keychains only: custom design card for +5 DT */}
+                    {/* keychains only: custom design card, a switch that adds its fee to the price */}
                     {kind === "keychain" && (
                         <div className="pv-fade mt-7 lg:mt-[2vw]">
-                            <CustomCardBadge />
+                            <CustomCardBadge checked={custom} onChange={setCustom} />
                         </div>
                     )}
 

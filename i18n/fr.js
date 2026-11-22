@@ -3,11 +3,12 @@ export default {
     nav: {
         hero: "À propos",
         offer: "Promo",
-        cocktails: "Délais",
         menu: "Sacs",
-        contact: "Contact",
-        "catalogue-cta": "Catalogue",
         keychains: "Porte-clés",
+        gifts: "Cadeaux",
+        cocktails: "Délais",
+        contact: "Nous contacter",
+        "catalogue-cta": "Catalogue",
     },
 
     hero: {
@@ -56,7 +57,9 @@ export default {
         width: "Largeur",
         badge: "−{percent} % offre de lancement",
         colours: "Couleurs",
-        discover: "View details"
+        discover: "View details",
+        railHint: "Touchez un sac pour le découvrir",
+
     },
 
     spotlight: {
@@ -135,8 +138,8 @@ export default {
         slideLabel: "Porte-clés {current} sur {total}",
         imgAlt: "Porte-clés {name}",
         view: "View details",
-        custom: "En option : votre carte personnalisée",
-        customNote: "Chaque porte-clés est livré avec sa carte Hekeya. Envie d'un design créé rien que pour vous ? Ajoutez {price} DT.",
+        customTitle: "Carte au design personnalisé ({fee})",
+        customText: "Vous voulez votre propre design sur la carte fournie avec ? Activez l'option et le prix se met à jour. Sans elle, vous recevez notre carte standard sans supplément.",
 
     },
     product: {
@@ -189,9 +192,53 @@ export default {
             size: "Taille : {size}",
             link: "Lien : {url}",
             thanks: "Merci !",
+            customCard: "Carte au design personnalisé : oui (+{fee})",
         },
         sendText: "Il ne reste qu'à nous envoyer ce message sur Instagram ou Messenger.",
         sendWhere: "@hekeya.store sur Instagram · Hekeya sur Messenger",
         igText: "Vous préférez Instagram ? Copiez le message ci-dessus et envoyez-le à @hekeya.store.",
+
+    },
+    // ---- à coller dans le dictionnaire FR (à côté de hero, menu, order ...) ----
+    cards: {
+        back: "Retour à l'accueil",
+        eyebrow: "Pensé pour les couples",
+        notFound: "Ce cadeau n'est pas disponible pour le moment.",
+        sizeLabel: "Nombre de cartes",
+        cardsWord: "cartes",
+        boxIncluded: "Boîte cadeau incluse",
+        chooseTitle: "Vous choisissez",
+        choose1: "Le nombre de jokers (compris dans le total)",
+        choose2: "Le texte de chaque carte et joker",
+        choose3: "Le texte au dos des cartes",
+        choose4: "Vos photos",
+        fixedTitle: "Déjà dessiné",
+        fixedText: "Les couleurs et le design des cartes sont choisis par nous, pour que chaque jeu soit parfait.",
+        designTitle: "Design personnalisé (+{fee})",
+        designText: "Vous voulez vos propres couleurs et votre design ? Ajoutez-le ici. Vos textes sont toujours personnalisables gratuitement.",
+        ready: "Prêt en {days} jours",
+        readyOne: "Prêt en 1 jour",
+        order: "Commander",
+        orderSubject: "Commande : {name}",
+        turnBox: "Tournez la boîte",
+        boxLabel: "La boîte cadeau",
+        boxAlt: "{name}, boîte cadeau, côté {face}",
+        photoAlt: "{name}",
+        cardAlt: "{name} : une carte personnalisée",
+        seeBack: "Voir le dos",
+        seeFront: "Voir le recto",
+        flipHint: "Retourner la carte",
+        face: { front: "Face", back: "Dos", left: "Gauche", right: "Droite" },
+        msg: {
+            product: "Produit : {name}",
+            count: "Nombre de cartes : {n} (boîte cadeau incluse)",
+            design: "Design personnalisé : {answer}",
+            yes: "Oui (+{fee})",
+            no: "Non",
+            total: "Total : {price}",
+            jokers: "Jokers (combien + le texte de chacun) : ",
+            backText: "Texte au dos des cartes : ",
+            photos: "Je vous envoie mes photos dans cette conversation.",
+        },
     },
 };
