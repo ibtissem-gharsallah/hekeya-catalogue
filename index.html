@@ -2,26 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/images/favicon_hd.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hekeya</title>
+    <meta name="theme-color" content="#f7f2ea" />
 
-    <!-- local font: starts downloading immediately -->
+    <!-- cream page colour from the very first millisecond (no white flash while the JavaScript downloads) -->
+    <style>html,body{background:#f7f2ea;margin:0}</style>
+
+    <!-- favicon: use a SMALL file (under 15 kB). A 125 kB .ico is downloaded by every new visitor. Example: /images/favicon-48.png -->
+    <link rel="icon" type="image/svg+xml" href="/images/favicon_hd.ico" />
+
+    <!-- the two files the hero needs first: the title font + the yarn ball, downloaded in parallel with the JavaScript -->
     <link rel="preload" href="/fonts/ModernNegra.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/images-webp/yarn-ball.webp" as="image" type="image/webp" fetchpriority="high" />
 
-    <!-- the first thing visible in the hero: download it with top priority -->
-    <link rel="preload" href="/images-webp/yarn-ball.webp" as="image" fetchpriority="high" />
+    <!-- open the connection to Supabase now, so the first products request does not wait for it.
+         REPLACE with your own project address (the VITE_SUPABASE_URL value in your .env), e.g. https://abcdxyz.supabase.co -->
+    <link rel="preconnect" href="https://YOUR-PROJECT.supabase.co" crossorigin />
 
-    <!-- Supabase: open the connection early. Replace YOUR-PROJECT with your project id (the part before .supabase.co), then remove the comment marks -->
-    <!-- <link rel="preconnect" href="https://YOUR-PROJECT.supabase.co" crossorigin /> -->
-
-    <!-- ALL Google Fonts in one request (the @import in index.css is gone: it made the browser wait twice) -->
+    <!-- Google Fonts (Allura + Abril Fatface): they are only used further down the page, so they must NOT block the first paint.
+         media="print" + onload = downloaded quietly, applied when ready -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-            href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Allura&family=DM+Serif+Text:ital@0;1&family=Mona+Sans:wght@400..700&display=swap"
             rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Allura&family=Abril+Fatface&display=swap"
+            media="print"
+            onload="this.media='all'"
     />
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Abril+Fatface&display=swap" />
+    </noscript>
 </head>
 <body>
 <div id="root"></div>

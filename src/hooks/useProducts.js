@@ -4,17 +4,13 @@ import { supabase, imageUrl } from "../lib/supabase.js";
 
 let request = null; // one request shared by Menu and Cocktails
 
-// download only the photos the visitor is most likely to click next (first bag + the Spotlight bag).
-// Preloading EVERY colour of EVERY bag made the phone download dozens of big photos nobody asked for.
-const preloadImages = (sliderLists, featured) => {
-    [sliderLists[0], featured].filter(Boolean).forEach((p) => {
-        [p.image, ...(p.colors || []).map((c) => c.image)].forEach((src) => {
-            if (!src) return;
-            const img = new Image();
-            img.decoding = "async";
-            img.src = src;
-        });
-    });
+// start downloading one photo right now
+const preloadOne = (src, high = false) => {
+    if (!src) return;
+    const img = new Image();
+    img.decoding = "async";
+    if (high) img.fetchPriority = "high";
+    img.src = src;
 };
 
 // stop waiting after 8 s if the network hangs
@@ -74,10 +70,16 @@ const fetchProducts = () => {
                     .filter((b) => b.featuredAt)
                     .sort((a, b) => new Date(b.featuredAt) - new Date(a.featuredAt))[0] || null;
 
-            // wait until the page itself has finished loading AND the browser is idle, so these downloads never slow the first view
-            const start = () => ("requestIdleCallback" in window ? requestIdleCallback(() => preloadImages(sliderLists, featured), { timeout: 8000 }) : setTimeout(() => preloadImages(sliderLists, featured), 3000));
-            if (document.readyState === "complete") start();
-            else window.addEventListener("load", start, { once: true });
+            // the Spotlight bag photo: start NOW, the data has just arrived (this was the slowest photo of the page)
+            preloadOne(featured?.image || featured?.colors?.[0]?.image, true);
+            // the first bag of the catalogue: later, when the page has loaded and the browser is idle
+            const first = sliderLists[0];
+            if (first && first !== featured) {
+                const later = () => preloadOne(first.image || first.colors?.[0]?.image);
+                const start = () => ("requestIdleCallback" in window ? requestIdleCallback(later, { timeout: 8000 }) : setTimeout(later, 3000));
+                if (document.readyState === "complete") start();
+                else window.addEventListener("load", start, { once: true });
+            }
 
             return {
                 sliderLists, // same shape Menu.jsx already uses
@@ -95,6 +97,9 @@ const fetchProducts = () => {
     }
     return request;
 };
+
+// App.jsx calls this once the hero is on screen: the data is already there when the visitor scrolls down
+export const prefetchProducts = () => { fetchProducts().catch(() => { request = null; }); };
 
 export default function useProducts() {
     const [state, setState] = useState({ sliderLists: [], cocktailLists: [], featured: null, discount: { active: false, percent: 0 }, loading: true, error: null });

@@ -81,7 +81,7 @@ const SpotlightContent = ({ bag, discount }) => {
                     <div className="sp-bag-wrap">
                         <div className="sp-bag-float">
                             {/* key = a new <img> per photo, so the previous colour never lingers while the next one loads */}
-                            <img key={image} className="sp-bag-img" decoding="async" src={image} alt={t("spotlight.bagAlt", { name: bag.name })} />
+                            <img key={image} className="sp-bag-img" decoding="async" fetchPriority="high" src={image} alt={t("spotlight.bagAlt", { name: bag.name })} />
                         </div>
                     </div>
                 </div>
